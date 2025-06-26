@@ -1,3 +1,15 @@
+Of course\! Here is the complete code for InfinityBot, redesigned to use decorative cards for each section while keeping all the functionality and enhanced dropdown styling intact.
+
+The key changes are:
+
+  - Each `<section>` is now enclosed in a `<div class="card">`.
+  - New CSS styles are added for the `.card` class to give it a modern, elevated look with rounded corners, padding, and a backdrop filter effect.
+  - The card styling is also **theme-aware**, so it adapts beautifully to the `theme-cyber` and `theme-sunset` themes.
+  - The `<h1>` and `<p>` in the header are now also within a card for a cohesive design.
+
+Here is the complete, updated HTML code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,51 +17,169 @@
   <title>InfinityBot – The Ultimate Contextual AI Chat Companion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Base styles for the body and themes */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.5s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
     body.theme-default { background: linear-gradient(135deg, #232526, #414345); color: #fff; }
     body.theme-cyber { background: #0f2027; color: #39ff14; }
     body.theme-sunset { background: linear-gradient(90deg, #ff9966, #ff5e62); color: #222; }
-    nav { background: #222; padding: 10px 0; }
-    nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
-    nav ul li { margin: 0 20px; }
-    nav ul li a { color: #fff; text-decoration: none; font-weight: bold; }
-    nav ul li a:hover { text-decoration: underline; }
-    #theme-switcher { position: fixed; top: 10px; right: 10px; z-index: 999; }
-    header { text-align: center; margin-top: 40px; }
-    main { max-width: 900px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 16px; }
-    section { margin-bottom: 40px; }
-    h2 { border-bottom: 2px solid #444; padding-bottom: 6px; margin-bottom: 18px; }
-    #chat-window { min-height: 220px; background: rgba(30,30,30,0.8); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
-    #input-controls textarea { width: 70%; min-height: 40px; }
-    #input-controls select, #input-controls input[type="file"], #input-controls button { margin: 6px 4px; }
-    
+
+    /* Navigation bar styling */
+    nav { background: #222; padding: 10px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+    nav ul li { margin: 0 15px; }
+    nav ul li a { color: #fff; text-decoration: none; font-weight: bold; padding: 8px 12px; border-radius: 6px; transition: background-color 0.3s ease; }
+    nav ul li a:hover { background-color: #444; text-decoration: none; }
+
+    /* Theme switcher button */
+    #theme-switcher { position: fixed; top: 15px; right: 15px; z-index: 1000; }
+    #theme-switcher button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    #theme-switcher button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Main content container and card styling */
+    main { max-width: 1000px; margin: 40px auto; padding: 20px; }
+    .card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      transform: translateY(-5px);
+    }
+    header .card {
+      background: rgba(0,0,0,0.6);
+      text-align: center;
+      padding: 40px 20px;
+      border: 2px solid #39ff14; /* Highlight for the header card */
+    }
+
+    /* Card styling for different themes */
+    body.theme-cyber .card {
+      background: rgba(15, 32, 39, 0.6);
+      border-color: rgba(57, 255, 20, 0.4);
+      box-shadow: 0 8px 30px rgba(57, 255, 20, 0.1);
+    }
+    body.theme-sunset .card {
+      background: rgba(255, 255, 255, 0.8);
+      color: #222;
+      border-color: rgba(255, 94, 98, 0.6);
+      box-shadow: 0 8px 30px rgba(255, 94, 98, 0.2);
+    }
+    body.theme-sunset header .card { border-color: #ff5e62; }
+
+    /* Section headings */
+    h2 {
+      border-bottom: 2px solid #444;
+      padding-bottom: 10px;
+      margin-bottom: 25px;
+      font-size: 2em;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    body.theme-cyber h2 { border-color: #39ff14; }
+    body.theme-sunset h2 { border-color: #ff5e62; }
+
+    /* Chat window and input controls */
+    #chat-window { min-height: 300px; background: rgba(30,30,30,0.8); border-radius: 12px; padding: 18px; margin-bottom: 20px; overflow-y: auto; }
+    body.theme-cyber #chat-window { background: #0a1419; border: 1px solid #39ff14; }
+    body.theme-sunset #chat-window { background: rgba(255,255,255,0.9); }
+    #input-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    #input-controls textarea {
+      flex-grow: 1;
+      min-height: 50px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #2b2b2b;
+      color: #fff;
+      font-size: 16px;
+      resize: vertical;
+    }
+    body.theme-sunset #input-controls textarea { background: #fff; color: #222; border-color: #ccc; }
+    #input-controls button {
+      padding: 10px 20px;
+      background: #39ff14;
+      color: #222;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    #input-controls button:hover {
+      background: #2bd612;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    #input-controls input[type="file"] {
+      padding: 10px;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+      border: 2px dashed #666;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
     /* Enhanced Dropdown Styling */
     #input-controls select {
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px 15px;
+      border-radius: 8px;
       border: 1px solid #444;
       background-color: #333;
       color: #fff;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      appearance: none;
+      appearance: none; /* Hide default dropdown arrow */
+      -webkit-appearance: none;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 16px;
-      min-width: 180px;
+      background-position: right 12px center;
+      background-size: 18px;
+      min-width: 200px;
     }
     
     #input-controls select:hover {
       background-color: #444;
-      border-color: #555;
+      border-color: #666;
     }
     
     #input-controls select:focus {
       outline: none;
       border-color: #39ff14;
-      box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.2);
+      box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.4);
     }
     
     /* Different theme dropdown styles */
@@ -57,64 +187,116 @@
       background-color: #0a1419;
       border-color: #39ff14;
       color: #39ff14;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2339ff14'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
     
     body.theme-sunset #input-controls select {
       background-color: rgba(255,255,255,0.9);
       color: #333;
       border-color: #ff5e62;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
-    
-    #input-controls button {
-      padding: 8px 16px;
-      background: #39ff14;
-      color: #222;
-      border: none;
-      border-radius: 6px;
+
+    /* Buttons for study and mental health sections */
+    #study-tools, #mental-health { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+    #study-tools button, #mental-health button {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
-    
-    #input-controls button:hover {
-      background: #2bd612;
-      transform: translateY(-1px);
+    #study-tools button:hover, #mental-health button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     }
-    
-    #input-controls input[type="file"] {
-      padding: 6px;
-      border-radius: 6px;
-      background: #333;
-      color: #fff;
-      border: 1px dashed #666;
+    body.theme-cyber #study-tools button, body.theme-cyber #mental-health button {
+      background: rgba(57, 255, 20, 0.1);
+      border-color: #39ff14;
+      color: #39ff14;
     }
-    
-    #study-tools, #mental-health { display: flex; gap: 12px; margin-bottom: 18px; }
-    #timeline { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; }
-    #history-timeline { max-height: 120px; overflow-y: auto; font-size: 0.94em; }
-    #stats { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 20px; }
-    #stats-charts { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-around; }
-    .stat-chart { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 18px 24px; margin-bottom: 18px; }
-    .stat-chart canvas { background: #fff; border-radius: 8px; }
-    #stats-summary { margin-bottom: 24px; }
-    .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
-    .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
-    .manual-table th { background: #333; }
-    footer { text-align: center; color: #aaa; margin: 40px 0 10px 0; }
-    blockquote { color: #ffd700; margin: 18px 0; padding-left: 18px; border-left: 4px solid #ffd700; }
+    body.theme-sunset #study-tools button, body.theme-sunset #mental-health button {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: #ff5e62;
+      color: #333;
+    }
+
+    /* Manual and table styling */
+    .manual-table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.95em; }
+    .manual-table th, .manual-table td {
+      border: 1px solid #666;
+      padding: 12px;
+      text-align: left;
+    }
+    .manual-table th { background: #333; font-weight: bold; }
+    .manual-table td { background: rgba(30,30,30,0.7); }
+    body.theme-sunset .manual-table th { background: #eee; color: #222; }
+    body.theme-sunset .manual-table td { background: rgba(255,255,255,0.9); color: #222; }
+    .manual-table ul { padding-left: 20px; margin: 0; }
+    .manual-table li { margin-bottom: 5px; }
+
+    /* Quote styling */
+    blockquote {
+      color: #ffd700;
+      margin: 30px 0;
+      padding-left: 20px;
+      border-left: 5px solid #ffd700;
+      font-style: italic;
+      font-size: 1.1em;
+    }
+
+    /* Timeline and stats section styles */
+    #history-timeline { max-height: 250px; overflow-y: auto; font-size: 0.94em; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); }
+    #stats-summary { margin-bottom: 24px; font-size: 1.1em; }
+    #stats-summary ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 20px; }
+    #stats-summary li { background: rgba(255,255,255,0.08); padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+    #stats-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; justify-content: center; }
+    .stat-chart {
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .stat-chart canvas { background: #fff; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+    /* Footer styling */
+    footer { text-align: center; color: #aaa; margin: 50px 0 20px 0; font-size: 0.9em; }
+
+    /* Media queries for responsiveness */
+    @media (max-width: 1024px) {
+      main { padding: 10px; }
+      .card { padding: 25px; margin-bottom: 25px; }
+      #stats-charts { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav ul { justify-content: space-around; gap: 10px; }
+      nav ul li { margin: 5px; }
+      #input-controls select { min-width: 150px; }
+      #input-controls button, #input-controls input[type="file"] { flex-grow: 1; }
+      .manual-table th, .manual-table td { padding: 10px; }
+    }
     @media (max-width: 600px) {
-      main { padding: 6px; }
-      #input-controls textarea { width: 98%; }
-      nav ul { flex-direction: column; }
+      nav ul { flex-direction: column; text-align: center; }
       nav ul li { margin: 8px 0; }
-      #stats-charts { flex-direction: column; gap: 24px; }
-      #input-controls select {
-        min-width: 100%;
-        margin: 6px 0;
-      }
+      .card { padding: 15px; border-radius: 15px; }
+      header .card { padding: 30px 15px; }
+      h2 { font-size: 1.7em; }
+      #input-controls textarea { width: 100%; margin-bottom: 10px; }
+      #input-controls select, #input-controls input[type="file"], #input-controls button { width: 100%; margin: 5px 0; }
+      #study-tools, #mental-health { flex-direction: column; }
+      #stats-summary ul { flex-direction: column; gap: 10px; }
+      #theme-switcher { top: 5px; right: 5px; }
     }
   </style>
-  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="theme-default">
@@ -134,393 +316,409 @@
     </ul>
   </nav>
   <header>
-    <h1>InfinityBot</h1>
-    <p>The chatbot that never forgets, speaks every language, and adapts to you.</p>
+    <div class="card">
+      <h1>InfinityBot</h1>
+      <p>The chatbot that never forgets, speaks every language, and adapts to you.</p>
+    </div>
   </header>
   <main>
     <section id="about">
-      <h2>About InfinityBot</h2>
-      <p>
-        InfinityBot is designed for global teams, students, developers, and anyone who needs a chatbot that remembers everything, adapts to your tone and mood, and offers a complete suite of productivity and wellness features. With infinite memory, multilingual mastery, screenshot-to-code, persona impersonation, and built-in mental health support, it's the only AI companion you'll ever need.
-      </p>
+      <div class="card">
+        <h2>About InfinityBot</h2>
+        <p>
+          InfinityBot is designed for global teams, students, developers, and anyone who needs a chatbot that remembers everything, adapts to your tone and mood, and offers a complete suite of productivity and wellness features. With infinite memory, multilingual mastery, screenshot-to-code, persona impersonation, and built-in mental health support, it's the only AI companion you'll ever need.
+        </p>
+      </div>
     </section>
     <section id="manual">
-      <h2>Complete User Manual: Prompts & Capabilities</h2>
-      <p>
-        InfinityBot is built to handle a wide variety of queries, tasks, and workflows. Below is the complete guide to what you can ask or do, with detailed examples.
-      </p>
-      
-      <h3>Core Features & Example Prompts</h3>
-      <table class="manual-table">
-        <tr>
-          <th>Category</th>
-          <th>Capabilities</th>
-          <th>Example Prompts</th>
-        </tr>
-        <tr>
-          <td>Memory & Context</td>
-          <td>
-            - Infinite conversation memory<br>
-            - Cross-session context retention<br>
-            - Reference past discussions<br>
-            - Contextual follow-ups
-          </td>
-          <td>
-            "What were the 3 points we discussed about React hooks yesterday?"<br>
-            "Continue from where we left off about the marketing strategy"<br>
-            "Find my last question about Python decorators"<br>
-            "Summarize our conversation from last week"
-          </td>
-        </tr>
-        <tr>
-          <td>Multilingual</td>
-          <td>
-            - Natural language translation<br>
-            - Idiomatic expressions<br>
-            - Cultural adaptation<br>
-            - Multilingual conversations
-          </td>
-          <td>
-            "Translate this to French but make it sound native"<br>
-            "How would you say 'break a leg' in German?"<br>
-            "Explain this concept in Spanish for a beginner"<br>
-            "Continue this conversation in Japanese"
-          </td>
-        </tr>
-        <tr>
-          <td>Visual Analysis</td>
-          <td>
-            - Screenshot to code<br>
-            - UI/UX feedback<br>
-            - Diagram interpretation<br>
-            - Error message analysis
-          </td>
-          <td>
-            "Generate HTML/CSS from this screenshot"<br>
-            "What's wrong with this UI design?"<br>
-            "Explain this architecture diagram"<br>
-            "What does this error message mean?"
-          </td>
-        </tr>
-        <tr>
-          <td>Tone & Style</td>
-          <td>
-            - Adjust formality<br>
-            - Emotional tone control<br>
-            - Persona impersonation<br>
-            - Industry-specific jargon
-          </td>
-          <td>
-            "Explain this like I'm 5 years old"<br>
-            "Make this response more enthusiastic"<br>
-            "Answer like Steve Jobs would"<br>
-            "Explain using medical terminology"
-          </td>
-        </tr>
-        <tr>
-          <td>Productivity</td>
-          <td>
-            - Meeting summaries<br>
-            - Email drafting<br>
-            - Code debugging<br>
-            - Document analysis
-          </td>
-          <td>
-            "Summarize these meeting notes"<br>
-            "Draft a professional email about the delay"<br>
-            "Why isn't this Python code working?"<br>
-            "Extract key points from this PDF"
-          </td>
-        </tr>
-        <tr>
-          <td>Learning</td>
-          <td>
-            - Study guides<br>
-            - Flashcards<br>
-            - Concept explanations<br>
-            - Quiz generation
-          </td>
-          <td>
-            "Create a study guide for calculus"<br>
-            "Make flashcards from our last discussion"<br>
-            "Explain quantum computing simply"<br>
-            "Test me on French vocabulary"
-          </td>
-        </tr>
-        <tr>
-          <td>Mental Health</td>
-          <td>
-            - Stress detection<br>
-            - Guided meditation<br>
-            - Cognitive exercises<br>
-            - Mood tracking
-          </td>
-          <td>
-            "I'm feeling anxious, help me calm down"<br>
-            "Guide me through a 5-minute meditation"<br>
-            "Suggest exercises to improve focus"<br>
-            "Track my mood this week"
-          </td>
-        </tr>
-        <tr>
-          <td>Creative</td>
-          <td>
-            - Story writing<br>
-            - Poetry generation<br>
-            - Brainstorming<br>
-            - Roleplaying
-          </td>
-          <td>
-            "Write a short sci-fi story"<br>
-            "Compose a haiku about autumn"<br>
-            "Brainstorm names for my startup"<br>
-            "Let's roleplay a job interview"
-          </td>
-        </tr>
-      </table>
+      <div class="card">
+        <h2>Complete User Manual: Prompts & Capabilities</h2>
+        <p>
+          InfinityBot is built to handle a wide variety of queries, tasks, and workflows. Below is the complete guide to what you can ask or do, with detailed examples.
+        </p>
+        
+        <h3>Core Features & Example Prompts</h3>
+        <table class="manual-table">
+          <tr>
+            <th>Category</th>
+            <th>Capabilities</th>
+            <th>Example Prompts</th>
+          </tr>
+          <tr>
+            <td>Memory & Context</td>
+            <td>
+              - Infinite conversation memory<br>
+              - Cross-session context retention<br>
+              - Reference past discussions<br>
+              - Contextual follow-ups
+            </td>
+            <td>
+              "What were the 3 points we discussed about React hooks yesterday?"<br>
+              "Continue from where we left off about the marketing strategy"<br>
+              "Find my last question about Python decorators"<br>
+              "Summarize our conversation from last week"
+            </td>
+          </tr>
+          <tr>
+            <td>Multilingual</td>
+            <td>
+              - Natural language translation<br>
+              - Idiomatic expressions<br>
+              - Cultural adaptation<br>
+              - Multilingual conversations
+            </td>
+            <td>
+              "Translate this to French but make it sound native"<br>
+              "How would you say 'break a leg' in German?"<br>
+              "Explain this concept in Spanish for a beginner"<br>
+              "Continue this conversation in Japanese"
+            </td>
+          </tr>
+          <tr>
+            <td>Visual Analysis</td>
+            <td>
+              - Screenshot to code<br>
+              - UI/UX feedback<br>
+              - Diagram interpretation<br>
+              - Error message analysis
+            </td>
+            <td>
+              "Generate HTML/CSS from this screenshot"<br>
+              "What's wrong with this UI design?"<br>
+              "Explain this architecture diagram"<br>
+              "What does this error message mean?"
+            </td>
+          </tr>
+          <tr>
+            <td>Tone & Style</td>
+            <td>
+              - Adjust formality<br>
+              - Emotional tone control<br>
+              - Persona impersonation<br>
+              - Industry-specific jargon
+            </td>
+            <td>
+              "Explain this like I'm 5 years old"<br>
+              "Make this response more enthusiastic"<br>
+              "Answer like Steve Jobs would"<br>
+              "Explain using medical terminology"
+            </td>
+          </tr>
+          <tr>
+            <td>Productivity</td>
+            <td>
+              - Meeting summaries<br>
+              - Email drafting<br>
+              - Code debugging<br>
+              - Document analysis
+            </td>
+            <td>
+              "Summarize these meeting notes"<br>
+              "Draft a professional email about the delay"<br>
+              "Why isn't this Python code working?"<br>
+              "Extract key points from this PDF"
+            </td>
+          </tr>
+          <tr>
+            <td>Learning</td>
+            <td>
+              - Study guides<br>
+              - Flashcards<br>
+              - Concept explanations<br>
+              - Quiz generation
+            </td>
+            <td>
+              "Create a study guide for calculus"<br>
+              "Make flashcards from our last discussion"<br>
+              "Explain quantum computing simply"<br>
+              "Test me on French vocabulary"
+            </td>
+          </tr>
+          <tr>
+            <td>Mental Health</td>
+            <td>
+              - Stress detection<br>
+              - Guided meditation<br>
+              - Cognitive exercises<br>
+              - Mood tracking
+            </td>
+            <td>
+              "I'm feeling anxious, help me calm down"<br>
+              "Guide me through a 5-minute meditation"<br>
+              "Suggest exercises to improve focus"<br>
+              "Track my mood this week"
+            </td>
+          </tr>
+          <tr>
+            <td>Creative</td>
+            <td>
+              - Story writing<br>
+              - Poetry generation<br>
+              - Brainstorming<br>
+              - Roleplaying
+            </td>
+            <td>
+              "Write a short sci-fi story"<br>
+              "Compose a haiku about autumn"<br>
+              "Brainstorm names for my startup"<br>
+              "Let's roleplay a job interview"
+            </td>
+          </tr>
+        </table>
 
-      <h3>Advanced Prompt Engineering</h3>
-      <table class="manual-table">
-        <tr>
-          <th>Technique</th>
-          <th>Description</th>
-          <th>Examples</th>
-        </tr>
-        <tr>
-          <td>Multi-step Tasks</td>
-          <td>Break down complex requests into steps</td>
-          <td>
-            "First analyze this code, then suggest improvements, and finally rewrite it"<br>
-            "Step 1: Explain the concept. Step 2: Give examples. Step 3: Create a quiz"
-          </td>
-        </tr>
-        <tr>
-          <td>Conditional Logic</td>
-          <td>Create if-then scenarios</td>
-          <td>
-            "If the user is a beginner, explain simply. If advanced, use technical terms"<br>
-            "When discussing sensitive topics, use empathetic language"
-          </td>
-        </tr>
-        <tr>
-          <td>Template Filling</td>
-          <td>Provide structured templates</td>
-          <td>
-            "Fill this template: Problem: ___, Solution: ___, Benefits: ___"<br>
-            "Generate a SWOT analysis for my business"
-          </td>
-        </tr>
-        <tr>
-          <td>Comparative Analysis</td>
-          <td>Compare concepts/options</td>
-          <td>
-            "Compare React vs Vue for e-commerce sites"<br>
-            "Pros and cons of remote vs office work"
-          </td>
-        </tr>
-        <tr>
-          <td>Hypotheticals</td>
-          <td>Explore what-if scenarios</td>
-          <td>
-            "What if the internet disappeared tomorrow?"<br>
-            "How would AI change healthcare in 2050?"
-          </td>
-        </tr>
-      </table>
+        <h3>Advanced Prompt Engineering</h3>
+        <table class="manual-table">
+          <tr>
+            <th>Technique</th>
+            <th>Description</th>
+            <th>Examples</th>
+          </tr>
+          <tr>
+            <td>Multi-step Tasks</td>
+            <td>Break down complex requests into steps</td>
+            <td>
+              "First analyze this code, then suggest improvements, and finally rewrite it"<br>
+              "Step 1: Explain the concept. Step 2: Give examples. Step 3: Create a quiz"
+            </td>
+          </tr>
+          <tr>
+            <td>Conditional Logic</td>
+            <td>Create if-then scenarios</td>
+            <td>
+              "If the user is a beginner, explain simply. If advanced, use technical terms"<br>
+              "When discussing sensitive topics, use empathetic language"
+            </td>
+          </tr>
+          <tr>
+            <td>Template Filling</td>
+            <td>Provide structured templates</td>
+            <td>
+              "Fill this template: Problem: ___, Solution: ___, Benefits: ___"<br>
+              "Generate a SWOT analysis for my business"
+            </td>
+          </tr>
+          <tr>
+            <td>Comparative Analysis</td>
+            <td>Compare concepts/options</td>
+            <td>
+              "Compare React vs Vue for e-commerce sites"<br>
+              "Pros and cons of remote vs office work"
+            </td>
+          </tr>
+          <tr>
+            <td>Hypotheticals</td>
+            <td>Explore what-if scenarios</td>
+            <td>
+              "What if the internet disappeared tomorrow?"<br>
+              "How would AI change healthcare in 2050?"
+            </td>
+          </tr>
+        </table>
 
-      <h3>Specialized Use Cases</h3>
-      <div style="columns: 2; column-gap: 40px;">
-        <div>
-          <h4>For Developers</h4>
-          <ul>
-            <li>"Debug this Python code with error handling"</li>
-            <li>"Optimize this SQL query for performance"</li>
-            <li>"Explain the Observer pattern with a TypeScript example"</li>
-            <li>"Convert this Java class to Kotlin"</li>
-            <li>"Generate API documentation from this code"</li>
-          </ul>
-          
-          <h4>For Students</h4>
-          <ul>
-            <li>"Explain the water cycle like I'm 10"</li>
-            <li>"Create a study schedule for finals week"</li>
-            <li>"Grade my essay against rubric criteria"</li>
-            <li>"Simplify this physics equation"</li>
-            <li>"Suggest memorization techniques for dates"</li>
-          </ul>
+        <h3>Specialized Use Cases</h3>
+        <div style="columns: 2; column-gap: 40px;">
+          <div>
+            <h4>For Developers</h4>
+            <ul>
+              <li>"Debug this Python code with error handling"</li>
+              <li>"Optimize this SQL query for performance"</li>
+              <li>"Explain the Observer pattern with a TypeScript example"</li>
+              <li>"Convert this Java class to Kotlin"</li>
+              <li>"Generate API documentation from this code"</li>
+            </ul>
+            
+            <h4>For Students</h4>
+            <ul>
+              <li>"Explain the water cycle like I'm 10"</li>
+              <li>"Create a study schedule for finals week"</li>
+              <li>"Grade my essay against rubric criteria"</li>
+              <li>"Simplify this physics equation"</li>
+              <li>"Suggest memorization techniques for dates"</li>
+            </ul>
+          </div>
+          <div>
+            <h4>For Professionals</h4>
+            <ul>
+              <li>"Draft a project status update for stakeholders"</li>
+              <li>"Improve this sales pitch for enterprise clients"</li>
+              <li>"Analyze these metrics and highlight trends"</li>
+              <li>"Prepare me for a negotiation scenario"</li>
+              <li>"Generate competitive analysis for our product"</li>
+            </ul>
+            
+            <h4>For Personal Use</h4>
+            <ul>
+              <li>"Plan a healthy meal plan for the week"</li>
+              <li>"Suggest books based on my favorites"</li>
+              <li>"Help me write a dating profile"</li>
+              <li>"Create a workout routine for beginners"</li>
+              <li>"Meditation script for better sleep"</li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h4>For Professionals</h4>
-          <ul>
-            <li>"Draft a project status update for stakeholders"</li>
-            <li>"Improve this sales pitch for enterprise clients"</li>
-            <li>"Analyze these metrics and highlight trends"</li>
-            <li>"Prepare me for a negotiation scenario"</li>
-            <li>"Generate competitive analysis for our product"</li>
-          </ul>
-          
-          <h4>For Personal Use</h4>
-          <ul>
-            <li>"Plan a healthy meal plan for the week"</li>
-            <li>"Suggest books based on my favorites"</li>
-            <li>"Help me write a dating profile"</li>
-            <li>"Create a workout routine for beginners"</li>
-            <li>"Meditation script for better sleep"</li>
-          </ul>
-        </div>
+
+        <h3>Best Practices</h3>
+        <ul>
+          <li><strong>Be specific:</strong> "Suggest 3 time management techniques for remote workers" is better than "Tell me about productivity"</li>
+          <li><strong>Provide context:</strong> "I'm a beginner in photography, explain aperture"</li>
+          <li><strong>Use step-by-step:</strong> Break complex requests into logical steps</li>
+          <li><strong>Set constraints:</strong> "In 3 sentences, explain blockchain"</li>
+          <li><strong>Iterate:</strong> "Now make that explanation more technical"</li>
+          <li><strong>Combine features:</strong> "Translate this to Spanish in a formal business tone"</li>
+        </ul>
+
+        <blockquote>
+          InfinityBot learns from your interactions - the more you use it, the better it adapts to your style and needs!
+        </blockquote>
       </div>
-
-      <h3>Best Practices</h3>
-      <ul>
-        <li><strong>Be specific:</strong> "Suggest 3 time management techniques for remote workers" is better than "Tell me about productivity"</li>
-        <li><strong>Provide context:</strong> "I'm a beginner in photography, explain aperture"</li>
-        <li><strong>Use step-by-step:</strong> Break complex requests into logical steps</li>
-        <li><strong>Set constraints:</strong> "In 3 sentences, explain blockchain"</li>
-        <li><strong>Iterate:</strong> "Now make that explanation more technical"</li>
-        <li><strong>Combine features:</strong> "Translate this to Spanish in a formal business tone"</li>
-      </ul>
-
-      <blockquote>
-        InfinityBot learns from your interactions - the more you use it, the better it adapts to your style and needs!
-      </blockquote>
     </section>
     <section id="chat">
-      <h2>Chat Interface</h2>
-      <div id="chat-window">
-        <!-- Chat messages would appear here -->
-      </div>
-      <div id="input-controls">
-        <textarea id="user-input" placeholder="Type or drop a screenshot..."></textarea>
-        <input type="file" id="screenshot-upload" accept="image/*" />
-        <select id="persona-select">
-          <option value="default">Default</option>
-          <option value="sun-tzu">Sun Tzu</option>
-          <option value="mr-robot">Mr. Robot</option>
-          <option value="defcon">DEFCON Speaker</option>
-          <option value="jobs">Steve Jobs</option>
-          <option value="einstein">Albert Einstein</option>
-          <option value="shakespeare">Shakespeare</option>
-        </select>
-        <select id="language-select">
-          <option value="en">English</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-          <option value="ja">日本語</option>
-          <option value="zh">中文</option>
-          <option value="ru">Русский</option>
-        </select>
-        <select id="formality-select">
-          <option value="default">Formality: Default</option>
-          <option value="rfc">RFC-level Formal</option>
-          <option value="legal">Legal/Contract</option>
-          <option value="neutral">Neutral</option>
-          <option value="casual">Casual</option>
-          <option value="slang">Slang/Informal</option>
-          <option value="hacker">Hacker-con Casual</option>
-        </select>
-        <select id="emotion-select">
-          <option value="auto">Emotion: Auto Detect</option>
-          <option value="neutral">Neutral</option>
-          <option value="happy">Happy/Excited</option>
-          <option value="sad">Sad/Compassionate</option>
-          <option value="angry">Angry/Passionate</option>
-          <option value="frustrated">Frustrated</option>
-          <option value="sarcastic">Sarcastic</option>
-          <option value="empathetic">Empathetic</option>
-          <option value="excited">Excited</option>
-          <option value="confused">Confused</option>
-          <option value="encouraging">Encouraging</option>
-          <option value="humorous">Humorous</option>
-        </select>
-        <button onclick="sendMessage()">Send</button>
+      <div class="card">
+        <h2>Chat Interface</h2>
+        <div id="chat-window">
+          </div>
+        <div id="input-controls">
+          <textarea id="user-input" placeholder="Type or drop a screenshot..."></textarea>
+          <input type="file" id="screenshot-upload" accept="image/*" />
+          <select id="persona-select">
+            <option value="default">Default</option>
+            <option value="sun-tzu">Sun Tzu</option>
+            <option value="mr-robot">Mr. Robot</option>
+            <option value="defcon">DEFCON Speaker</option>
+            <option value="jobs">Steve Jobs</option>
+            <option value="einstein">Albert Einstein</option>
+            <option value="shakespeare">Shakespeare</option>
+          </select>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+            <option value="zh">中文</option>
+            <option value="ru">Русский</option>
+          </select>
+          <select id="formality-select">
+            <option value="default">Formality: Default</option>
+            <option value="rfc">RFC-level Formal</option>
+            <option value="legal">Legal/Contract</option>
+            <option value="neutral">Neutral</option>
+            <option value="casual">Casual</option>
+            <option value="slang">Slang/Informal</option>
+            <option value="hacker">Hacker-con Casual</option>
+          </select>
+          <select id="emotion-select">
+            <option value="auto">Emotion: Auto Detect</option>
+            <option value="neutral">Neutral</option>
+            <option value="happy">Happy/Excited</option>
+            <option value="sad">Sad/Compassionate</option>
+            <option value="angry">Angry/Passionate</option>
+            <option value="frustrated">Frustrated</option>
+            <option value="sarcastic">Sarcastic</option>
+            <option value="empathetic">Empathetic</option>
+            <option value="excited">Excited</option>
+            <option value="confused">Confused</option>
+            <option value="encouraging">Encouraging</option>
+            <option value="humorous">Humorous</option>
+          </select>
+          <button onclick="sendMessage()">Send</button>
+        </div>
       </div>
     </section>
     <section id="study">
-      <h2>Study Tools</h2>
-      <div id="study-tools">
-        <button onclick="generateCheatSheet()">Cheat Sheet</button>
-        <button onclick="generateFlashcards()">Flashcards</button>
-        <button onclick="generateQuiz()">Quiz</button>
-        <button onclick="generateSummary()">Summary</button>
+      <div class="card">
+        <h2>Study Tools</h2>
+        <div id="study-tools">
+          <button onclick="generateCheatSheet()">Cheat Sheet</button>
+          <button onclick="generateFlashcards()">Flashcards</button>
+          <button onclick="generateQuiz()">Quiz</button>
+          <button onclick="generateSummary()">Summary</button>
+        </div>
+        <p>
+          Instantly convert your chat into exam-ready cheat sheets or interactive flashcards with one click. Perfect for students and professionals alike.
+        </p>
       </div>
-      <p>
-        Instantly convert your chat into exam-ready cheat sheets or interactive flashcards with one click. Perfect for students and professionals alike.
-      </p>
     </section>
     <section id="mental">
-      <h2>Mental Health & Wellness</h2>
-      <div id="mental-health">
-        <button onclick="startMeditation()">Meditation</button>
-        <button onclick="rageQuitTherapy()">Rage-Quit Therapy</button>
-        <button onclick="moodTracker()">Mood Tracker</button>
-        <button onclick="stressRelief()">Stress Relief</button>
+      <div class="card">
+        <h2>Mental Health & Wellness</h2>
+        <div id="mental-health">
+          <button onclick="startMeditation()">Meditation</button>
+          <button onclick="rageQuitTherapy()">Rage-Quit Therapy</button>
+          <button onclick="moodTracker()">Mood Tracker</button>
+          <button onclick="stressRelief()">Stress Relief</button>
+        </div>
+        <p>
+          InfinityBot proactively detects stress, frustration, or offensive prompts and offers instant support. Choose meditation or rage-quit therapy, or let the bot guide you to resources that help you recharge and refocus.
+        </p>
       </div>
-      <p>
-        InfinityBot proactively detects stress, frustration, or offensive prompts and offers instant support. Choose meditation or rage-quit therapy, or let the bot guide you to resources that help you recharge and refocus.
-      </p>
     </section>
     <section id="timeline">
-      <h2>Conversation Timeline</h2>
-      <div id="history-timeline">
-        <!-- Timeline of past prompts and responses would be rendered here -->
+      <div class="card">
+        <h2>Conversation Timeline</h2>
+        <div id="history-timeline">
+          </div>
+        <p>
+          Never lose track of your ideas or progress. The timeline feature gives you a complete, searchable history of every prompt and reply—like a time machine for your conversations.
+        </p>
       </div>
-      <p>
-        Never lose track of your ideas or progress. The timeline feature gives you a complete, searchable history of every prompt and reply—like a time machine for your conversations.
-      </p>
     </section>
     <section id="stats">
-      <h2>Performance Stats (Live Dashboard)</h2>
-      <div id="stats-summary">
-        <strong>Live Key Metrics:</strong>
-        <ul>
-          <li>Total Conversations: <span id="stat-total-conv">0</span></li>
-          <li>Automated Resolution Rate: <span id="stat-resolve-rate">0</span>%</li>
-          <li>Average CSAT: <span id="stat-csat">0</span>/100</li>
-          <li>Human Handoff Rate: <span id="stat-handoff-rate">0</span>%</li>
-          <li>Fallback Rate: <span id="stat-fallback-rate">0</span>%</li>
-        </ul>
+      <div class="card">
+        <h2>Performance Stats (Live Dashboard)</h2>
+        <div id="stats-summary">
+          <strong>Live Key Metrics:</strong>
+          <ul>
+            <li>Total Conversations: <span id="stat-total-conv">0</span></li>
+            <li>Automated Resolution Rate: <span id="stat-resolve-rate">0</span>%</li>
+            <li>Average CSAT: <span id="stat-csat">0</span>/100</li>
+            <li>Human Handoff Rate: <span id="stat-handoff-rate">0</span>%</li>
+            <li>Fallback Rate: <span id="stat-fallback-rate">0</span>%</li>
+          </ul>
+        </div>
+        <div id="stats-charts">
+          <div class="stat-chart">
+            <canvas id="chart-conversations" width="300" height="200"></canvas>
+            <div style="text-align:center;">Conversations Over Time</div>
+          </div>
+          <div class="stat-chart">
+            <canvas id="chart-resolution" width="300" height="200"></canvas>
+            <div style="text-align:center;">Resolution vs Handoff Rate</div>
+          </div>
+          <div class="stat-chart">
+            <canvas id="chart-fallback" width="300" height="200"></canvas>
+            <div style="text-align:center;">Fallback Rate by Topic</div>
+          </div>
+          <div class="stat-chart">
+            <canvas id="chart-csat" width="300" height="200"></canvas>
+            <div style="text-align:center;">CSAT Score Trend</div>
+          </div>
+        </div>
+        <p style="margin-top:20px;">
+          <em>All stats update live based on ongoing conversations and user feedback, giving you a real-time, visual overview of InfinityBot's performance and user satisfaction.</em>
+        </p>
       </div>
-      <div id="stats-charts">
-        <div class="stat-chart">
-          <canvas id="chart-conversations" width="300" height="200"></canvas>
-          <div style="text-align:center;">Conversations Over Time</div>
-        </div>
-        <div class="stat-chart">
-          <canvas id="chart-resolution" width="300" height="200"></canvas>
-          <div style="text-align:center;">Resolution vs Handoff Rate</div>
-        </div>
-        <div class="stat-chart">
-          <canvas id="chart-fallback" width="300" height="200"></canvas>
-          <div style="text-align:center;">Fallback Rate by Topic</div>
-        </div>
-        <div class="stat-chart">
-          <canvas id="chart-csat" width="300" height="200"></canvas>
-          <div style="text-align:center;">CSAT Score Trend</div>
-        </div>
-      </div>
-      <p style="margin-top:20px;">
-        <em>All stats update live based on ongoing conversations and user feedback, giving you a real-time, visual overview of InfinityBot's performance and user satisfaction.</em>
-      </p>
     </section>
     <section id="why-better">
-      <h2>Why InfinityBot is Unmatched</h2>
-      <ul>
-        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs.</li>
-        <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
-        <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
-        <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with dropdowns for user control.</li>
-        <li><strong>Famous Persona Mode:</strong> Instantly impersonates any requested personality—reports, advice, or jokes in their style.</li>
-        <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
-        <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
-        <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
-        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context.</li>
-        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun.</li>
-        <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
-      </ul>
-      <blockquote>
-        InfinityBot isn't just another chatbot—it's a contextual AI companion, study tool, and mental health ally, all in one. No more forgetting, no more robotic answers, no more language barriers.
-      </blockquote>
+      <div class="card">
+        <h2>Why InfinityBot is Unmatched</h2>
+        <ul>
+          <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs.</li>
+          <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
+          <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
+          <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with dropdowns for user control.</li>
+          <li><strong>Famous Persona Mode:</strong> Instantly impersonates any requested personality—reports, advice, or jokes in their style.</li>
+          <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
+          <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
+          <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
+          <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context.</li>
+          <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun.</li>
+          <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
+        </ul>
+        <blockquote>
+          InfinityBot isn't just another chatbot—it's a contextual AI companion, study tool, and mental health ally, all in one. No more forgetting, no more robotic answers, no more language barriers.
+        </blockquote>
+      </div>
     </section>
   </main>
   <footer>
@@ -652,3 +850,4 @@
   </script>
 </body>
 </html>
+```

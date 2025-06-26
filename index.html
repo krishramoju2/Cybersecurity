@@ -21,6 +21,74 @@
     #chat-window { min-height: 220px; background: rgba(30,30,30,0.8); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
     #input-controls textarea { width: 70%; min-height: 40px; }
     #input-controls select, #input-controls input[type="file"], #input-controls button { margin: 6px 4px; }
+    
+    /* Enhanced Dropdown Styling */
+    #input-controls select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background-color: #333;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+      min-width: 180px;
+    }
+    
+    #input-controls select:hover {
+      background-color: #444;
+      border-color: #555;
+    }
+    
+    #input-controls select:focus {
+      outline: none;
+      border-color: #39ff14;
+      box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.2);
+    }
+    
+    /* Different theme dropdown styles */
+    body.theme-cyber #input-controls select {
+      background-color: #0a1419;
+      border-color: #39ff14;
+      color: #39ff14;
+    }
+    
+    body.theme-sunset #input-controls select {
+      background-color: rgba(255,255,255,0.9);
+      color: #333;
+      border-color: #ff5e62;
+    }
+    
+    #input-controls button {
+      padding: 8px 16px;
+      background: #39ff14;
+      color: #222;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    #input-controls button:hover {
+      background: #2bd612;
+      transform: translateY(-1px);
+    }
+    
+    #input-controls input[type="file"] {
+      padding: 6px;
+      border-radius: 6px;
+      background: #333;
+      color: #fff;
+      border: 1px dashed #666;
+    }
+    
     #study-tools, #mental-health { display: flex; gap: 12px; margin-bottom: 18px; }
     #timeline { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; }
     #history-timeline { max-height: 120px; overflow-y: auto; font-size: 0.94em; }
@@ -40,6 +108,10 @@
       nav ul { flex-direction: column; }
       nav ul li { margin: 8px 0; }
       #stats-charts { flex-direction: column; gap: 24px; }
+      #input-controls select {
+        min-width: 100%;
+        margin: 6px 0;
+      }
     }
   </style>
   <!-- Chart.js CDN -->
@@ -325,30 +397,41 @@
           <option value="sun-tzu">Sun Tzu</option>
           <option value="mr-robot">Mr. Robot</option>
           <option value="defcon">DEFCON Speaker</option>
+          <option value="jobs">Steve Jobs</option>
+          <option value="einstein">Albert Einstein</option>
+          <option value="shakespeare">Shakespeare</option>
         </select>
         <select id="language-select">
           <option value="en">English</option>
           <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ru">Русский</option>
         </select>
         <select id="formality-select">
           <option value="default">Formality: Default</option>
           <option value="rfc">RFC-level Formal</option>
+          <option value="legal">Legal/Contract</option>
           <option value="neutral">Neutral</option>
           <option value="casual">Casual</option>
+          <option value="slang">Slang/Informal</option>
           <option value="hacker">Hacker-con Casual</option>
         </select>
         <select id="emotion-select">
           <option value="auto">Emotion: Auto Detect</option>
           <option value="neutral">Neutral</option>
-          <option value="happy">Happy</option>
-          <option value="sad">Sad</option>
-          <option value="angry">Angry</option>
+          <option value="happy">Happy/Excited</option>
+          <option value="sad">Sad/Compassionate</option>
+          <option value="angry">Angry/Passionate</option>
           <option value="frustrated">Frustrated</option>
           <option value="sarcastic">Sarcastic</option>
           <option value="empathetic">Empathetic</option>
           <option value="excited">Excited</option>
           <option value="confused">Confused</option>
           <option value="encouraging">Encouraging</option>
+          <option value="humorous">Humorous</option>
         </select>
         <button onclick="sendMessage()">Send</button>
       </div>
@@ -358,6 +441,8 @@
       <div id="study-tools">
         <button onclick="generateCheatSheet()">Cheat Sheet</button>
         <button onclick="generateFlashcards()">Flashcards</button>
+        <button onclick="generateQuiz()">Quiz</button>
+        <button onclick="generateSummary()">Summary</button>
       </div>
       <p>
         Instantly convert your chat into exam-ready cheat sheets or interactive flashcards with one click. Perfect for students and professionals alike.
@@ -368,6 +453,8 @@
       <div id="mental-health">
         <button onclick="startMeditation()">Meditation</button>
         <button onclick="rageQuitTherapy()">Rage-Quit Therapy</button>
+        <button onclick="moodTracker()">Mood Tracker</button>
+        <button onclick="stressRelief()">Stress Relief</button>
       </div>
       <p>
         InfinityBot proactively detects stress, frustration, or offensive prompts and offers instant support. Choose meditation or rage-quit therapy, or let the bot guide you to resources that help you recharge and refocus.
@@ -463,8 +550,12 @@
     function sendMessage() { alert('Send message logic goes here.'); }
     function generateCheatSheet() { alert('Cheat sheet generation logic goes here.'); }
     function generateFlashcards() { alert('Flashcard generation logic goes here.'); }
+    function generateQuiz() { alert('Quiz generation logic goes here.'); }
+    function generateSummary() { alert('Summary generation logic goes here.'); }
     function startMeditation() { alert('Meditation session logic goes here.'); }
     function rageQuitTherapy() { alert('Rage-quit therapy logic goes here.'); }
+    function moodTracker() { alert('Mood tracking logic goes here.'); }
+    function stressRelief() { alert('Stress relief exercises logic goes here.'); }
 
     // --- Live Stats & Charts Demo (simulated data) ---
     // Stats numbers

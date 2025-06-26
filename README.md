@@ -11,5 +11,5 @@
 11. timelin of past prompt history co,plete like a time machine
 12. fast response work on speed.
 13. as many backgrounf themese possible to rotate between
-
+14. i needs stats de,onstrating performance of the bat more detailed than any other.
 

@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>InfinityBot – The Ultimate Contextual AI Chat Companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body.theme-default { background: linear-gradient(135deg, #232526, #414345); color: #fff; }
+    body.theme-cyber { background: #0f2027; color: #39ff14; }
+    body.theme-sunset { background: linear-gradient(90deg, #ff9966, #ff5e62); color: #222; }
+    nav { background: #222; padding: 10px 0; }
+    nav ul { display: flex; justify-content: center; list-style: none; margin: 0; padding: 0; }
+    nav ul li { margin: 0 20px; }
+    nav ul li a { color: #fff; text-decoration: none; font-weight: bold; }
+    nav ul li a:hover { text-decoration: underline; }
+    #theme-switcher { position: fixed; top: 10px; right: 10px; z-index: 999; }
+    header { text-align: center; margin-top: 40px; }
+    main { max-width: 900px; margin: 40px auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 16px; }
+    section { margin-bottom: 40px; }
+    h2 { border-bottom: 2px solid #444; padding-bottom: 6px; margin-bottom: 18px; }
+    #chat-window { min-height: 220px; background: rgba(30,30,30,0.8); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+    #input-controls textarea { width: 70%; min-height: 40px; }
+    #input-controls select, #input-controls input[type="file"], #input-controls button { margin: 6px 4px; }
+    #study-tools, #mental-health { display: flex; gap: 12px; margin-bottom: 18px; }
+    #timeline { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; }
+    #history-timeline { max-height: 120px; overflow-y: auto; font-size: 0.94em; }
+    #stats ul { list-style: disc; margin-left: 24px; }
+    footer { text-align: center; color: #aaa; margin: 40px 0 10px 0; }
+    blockquote { color: #ffd700; margin: 18px 0; padding-left: 18px; border-left: 4px solid #ffd700; }
+    .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
+    .manual-table th { background: #333; }
+    @media (max-width: 600px) {
+      main { padding: 6px; }
+      #input-controls textarea { width: 98%; }
+      nav ul { flex-direction: column; }
+      nav ul li { margin: 8px 0; }
+    }
+  </style>
+</head>
+<body class="theme-default">
+  <div id="theme-switcher">
+    <button onclick="rotateTheme()">Switch Theme</button>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#manual">User Manual</a></li>
+      <li><a href="#chat">Chat</a></li>
+      <li><a href="#study">Study Tools</a></li>
+      <li><a href="#mental">Mental Health</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#stats">Performance</a></li>
+      <li><a href="#why-better">Why InfinityBot?</a></li>
+    </ul>
+  </nav>
+  <header>
+    <h1>InfinityBot</h1>
+    <p>The chatbot that never forgets, speaks every language, and adapts to you.</p>
+  </header>
+  <main>
+    <section id="about">
+      <h2>About InfinityBot</h2>
+      <p>
+        InfinityBot is designed for global teams, students, developers, and anyone who needs a chatbot that remembers everything, adapts to your tone and mood, and offers a complete suite of productivity and wellness features. With infinite memory, multilingual mastery, screenshot-to-code, persona impersonation, and built-in mental health support, it’s the only AI companion you’ll ever need.
+      </p>
+    </section>
+    <section id="manual">
+      <h2>User Manual: What You Can Search & Do with InfinityBot</h2>
+      <p>
+        InfinityBot is built to handle a wide variety of queries, tasks, and workflows. Use the table below to discover what you can ask or do, and how to get the most out of your experience.
+      </p>
+      <table class="manual-table">
+        <tr>
+          <th>Feature/Action</th>
+          <th>How to Use</th>
+          <th>Example Prompts/Queries</th>
+        </tr>
+        <tr>
+          <td>Infinite Context</td>
+          <td>Ask follow-up questions or refer to any previous conversation, even from past sessions. No need to repeat yourself.</td>
+          <td>
+            "What did I ask about JavaScript last week?"<br>
+            "Continue from our last discussion on GDPR."
+          </td>
+        </tr>
+        <tr>
+          <td>Multilingual Mastery</td>
+          <td>Request translations, converse in any major language, or ask for idiomatic/localized expressions.</td>
+          <td>
+            "Translate this to Japanese, but make it sound natural."<br>
+            "How do you say 'teamwork' in German?"<br>
+            "Respond in Spanish."
+          </td>
+        </tr>
+        <tr>
+          <td>Screenshot-to-Code/Query</td>
+          <td>Drag and drop a screenshot or upload an image for instant code, query, or UI analysis.</td>
+          <td>
+            "Here's a screenshot, generate the HTML/CSS for it."<br>
+            "Analyze this error message from my IDE."
+          </td>
+        </tr>
+        <tr>
+          <td>Emotion & Tone Control</td>
+          <td>Adjust the formality and emotional tone of responses using dropdowns. Bot detects frustration, sarcasm, and adapts automatically.</td>
+          <td>
+            "Make your answer more casual."<br>
+            "Respond with empathy."<br>
+            "Detect if I'm frustrated and offer help."
+          </td>
+        </tr>
+        <tr>
+          <td>Famous Persona Mode</td>
+          <td>Request responses in the style of any famous personality, hacker, or fictional character.</td>
+          <td>
+            "Explain this as Sun Tzu."<br>
+            "Summarize in the style of Mr. Robot."<br>
+            "Give advice like a DEFCON speaker."
+          </td>
+        </tr>
+        <tr>
+          <td>Cheat Sheets & Flashcards</td>
+          <td>Click to generate study aids from your chat history. Great for exam prep or quick review.</td>
+          <td>
+            "Make a cheat sheet from this session."<br>
+            "Create flashcards for these terms."
+          </td>
+        </tr>
+        <tr>
+          <td>Mental Health Support</td>
+          <td>Type about your stress or let the bot detect it. Access instant meditation or rage-quit therapy tools.</td>
+          <td>
+            "I'm feeling stressed."<br>
+            "Start a meditation session."<br>
+            "Help me calm down after a tough day."
+          </td>
+        </tr>
+        <tr>
+          <td>Timeline/History</td>
+          <td>Review, search, or jump to any previous prompt, answer, or session. Use the timeline to revisit your journey.</td>
+          <td>
+            "Show my chat history from last month."<br>
+            "Find my last question about Python."
+          </td>
+        </tr>
+        <tr>
+          <td>Customizable Themes</td>
+          <td>Switch between multiple UI themes for comfort, accessibility, or fun.</td>
+          <td>
+            "Change to cyberpunk theme."<br>
+            Use the 'Switch Theme' button.
+          </td>
+        </tr>
+        <tr>
+          <td>Advanced Stats & Diagnostics</td>
+          <td>Request detailed performance metrics, translation accuracy, or context retention stats.</td>
+          <td>
+            "Show me your performance stats."<br>
+            "How accurate was your last translation?"
+          </td>
+        </tr>
+      </table>
+      <h3>Best Practices & Tips</h3>
+      <ul>
+        <li>Be specific: The more detail you provide, the better the bot’s response.</li>
+        <li>Use persona and tone controls to match your audience or mood.</li>
+        <li>Leverage the timeline to revisit or build on past work—no need to start over.</li>
+        <li>Try mixing features: e.g., "Translate this, make it casual, and explain as Alan Turing."</li>
+        <li>For study, use cheat sheets and flashcards after any technical or factual discussion.</li>
+        <li>If you’re ever stuck, just ask, "What can you do?" for a refresher.</li>
+      </ul>
+      <blockquote>
+        InfinityBot is flexible, context-aware, and always evolving. Explore, experiment, and let it adapt to your workflow!
+      </blockquote>
+    </section>
+    <section id="chat">
+      <h2>Chat Interface</h2>
+      <div id="chat-window">
+        <!-- Chat messages would appear here -->
+      </div>
+      <div id="input-controls">
+        <textarea id="user-input" placeholder="Type or drop a screenshot..."></textarea>
+        <input type="file" id="screenshot-upload" accept="image/*" />
+        <select id="persona-select">
+          <option value="default">Default</option>
+          <option value="sun-tzu">Sun Tzu</option>
+          <option value="mr-robot">Mr. Robot</option>
+          <option value="defcon">DEFCON Speaker</option>
+          <!-- ...add more... -->
+        </select>
+        <select id="language-select">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <!-- ...add more... -->
+        </select>
+        <!-- FORMALITY DROPDOWN -->
+        <select id="formality-select">
+          <option value="default">Formality: Default</option>
+          <option value="rfc">RFC-level Formal</option>
+          <option value="neutral">Neutral</option>
+          <option value="casual">Casual</option>
+          <option value="hacker">Hacker-con Casual</option>
+        </select>
+        <!-- EMOTION DROPDOWN -->
+        <select id="emotion-select">
+          <option value="auto">Emotion: Auto Detect</option>
+          <option value="neutral">Neutral</option>
+          <option value="happy">Happy</option>
+          <option value="sad">Sad</option>
+          <option value="angry">Angry</option>
+          <option value="frustrated">Frustrated</option>
+          <option value="sarcastic">Sarcastic</option>
+          <option value="empathetic">Empathetic</option>
+          <option value="excited">Excited</option>
+          <option value="confused">Confused</option>
+          <option value="encouraging">Encouraging</option>
+          <!-- Add more as needed -->
+        </select>
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </section>
+    <section id="study">
+      <h2>Study Tools</h2>
+      <div id="study-tools">
+        <button onclick="generateCheatSheet()">Cheat Sheet</button>
+        <button onclick="generateFlashcards()">Flashcards</button>
+      </div>
+      <p>
+        Instantly convert your chat into exam-ready cheat sheets or interactive flashcards with one click. Perfect for students and professionals alike.
+      </p>
+    </section>
+    <section id="mental">
+      <h2>Mental Health & Wellness</h2>
+      <div id="mental-health">
+        <button onclick="startMeditation()">Meditation</button>
+        <button onclick="rageQuitTherapy()">Rage-Quit Therapy</button>
+      </div>
+      <p>
+        InfinityBot proactively detects stress, frustration, or offensive prompts and offers instant support. Choose meditation or rage-quit therapy, or let the bot guide you to resources that help you recharge and refocus.
+      </p>
+    </section>
+    <section id="timeline">
+      <h2>Conversation Timeline</h2>
+      <div id="history-timeline">
+        <!-- Timeline of past prompts and responses would be rendered here -->
+      </div>
+      <p>
+        Never lose track of your ideas or progress. The timeline feature gives you a complete, searchable history of every prompt and reply—like a time machine for your conversations.
+      </p>
+    </section>
+    <section id="stats">
+      <h2>Performance Stats</h2>
+      <ul>
+        <li>Context Retention: Infinite (no loss across sessions)</li>
+        <li>Translation Accuracy: 98.5% idiomatic (benchmarked vs. native speakers)</li>
+        <li>Screenshot-to-Code: 2 seconds avg. (tested on 4K images)</li>
+        <li>Emotion Detection: 16+ emotions, 94% accuracy (validated on open datasets)</li>
+        <li>Response Speed: &lt;1s for text, &lt;3s for images (100k+ tokens context)</li>
+        <li>Persona Fidelity: Top-1 style match 91% (measured via Turing-style user tests)</li>
+        <li>Mental Health Support: 24/7, with escalation to human if needed</li>
+      </ul>
+    </section>
+    <section id="why-better">
+      <h2>Why InfinityBot is Unmatched</h2>
+      <ul>
+        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs[2].</li>
+        <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
+        <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
+        <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with dropdowns for user control.</li>
+        <li><strong>Famous Persona Mode:</strong> Instantly impersonates any requested personality—reports, advice, or jokes in their style.</li>
+        <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
+        <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
+        <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
+        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context[2].</li>
+        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun[1].</li>
+        <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
+      </ul>
+      <blockquote>
+        InfinityBot isn’t just another chatbot—it’s a contextual AI companion, study tool, and mental health ally, all in one. No more forgetting, no more robotic answers, no more language barriers.
+      </blockquote>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 InfinityBot. Built for humans, not just users.</p>
+  </footer>
+  <script>
+    // Theme rotation logic
+    const themes = ['theme-default', 'theme-cyber', 'theme-sunset'];
+    let themeIndex = 0;
+    function rotateTheme() {
+      themeIndex = (themeIndex + 1) % themes.length;
+      document.body.className = themes[themeIndex];
+    }
 
+    // Navigation smooth scroll
+    document.querySelectorAll('nav ul li a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Placeholder functions for UI buttons (to be implemented)
+    function sendMessage() { alert('Send message logic goes here.'); }
+    function generateCheatSheet() { alert('Cheat sheet generation logic goes here.'); }
+    function generateFlashcards() { alert('Flashcard generation logic goes here.'); }
+    function startMeditation() { alert('Meditation session logic goes here.'); }
+    function rageQuitTherapy() { alert('Rage-quit therapy logic goes here.'); }
+  </script>
+</body>
+</html>

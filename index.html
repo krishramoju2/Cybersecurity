@@ -27,16 +27,15 @@
     #stats ul { list-style: disc; margin-left: 24px; }
     footer { text-align: center; color: #aaa; margin: 40px 0 10px 0; }
     blockquote { color: #ffd700; margin: 18px 0; padding-left: 18px; border-left: 4px solid #ffd700; }
-    /* Responsive tweaks */
+    .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
+    .manual-table th { background: #333; }
     @media (max-width: 600px) {
       main { padding: 6px; }
       #input-controls textarea { width: 98%; }
       nav ul { flex-direction: column; }
       nav ul li { margin: 8px 0; }
     }
-    .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
-    .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
-    .manual-table th { background: #333; }
   </style>
 </head>
 <body class="theme-default">
@@ -104,7 +103,7 @@
         </tr>
         <tr>
           <td>Emotion & Tone Control</td>
-          <td>Adjust the formality and emotional tone of responses using sliders. Bot detects frustration, sarcasm, and adapts automatically.</td>
+          <td>Adjust the formality and emotional tone of responses using dropdowns. Bot detects frustration, sarcasm, and adapts automatically.</td>
           <td>
             "Make your answer more casual."<br>
             "Respond with empathy."<br>
@@ -195,12 +194,27 @@
           <option value="es">Español</option>
           <!-- ...add more... -->
         </select>
-        <div>
-          <label>Formality</label>
-          <input type="range" min="0" max="10" id="formality-slider" />
-          <label>Emotion</label>
-          <input type="range" min="0" max="10" id="emotion-slider" />
-        </div>
+        <select id="formality-select">
+          <option value="default">Default</option>
+          <option value="rfc">RFC-level Formal</option>
+          <option value="neutral">Neutral</option>
+          <option value="casual">Casual</option>
+          <option value="hacker">Hacker-con Casual</option>
+        </select>
+        <select id="emotion-select">
+          <option value="auto">Auto Detect</option>
+          <option value="neutral">Neutral</option>
+          <option value="happy">Happy</option>
+          <option value="sad">Sad</option>
+          <option value="angry">Angry</option>
+          <option value="frustrated">Frustrated</option>
+          <option value="sarcastic">Sarcastic</option>
+          <option value="empathetic">Empathetic</option>
+          <option value="excited">Excited</option>
+          <option value="confused">Confused</option>
+          <option value="encouraging">Encouraging</option>
+          <!-- Add more as needed -->
+        </select>
         <button onclick="sendMessage()">Send</button>
       </div>
     </section>
@@ -248,16 +262,16 @@
     <section id="why-better">
       <h2>Why InfinityBot is Unmatched</h2>
       <ul>
-        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs[9].</li>
+        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs.</li>
         <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
         <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
-        <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with sliders for user control.</li>
+        <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with dropdowns for user control.</li>
         <li><strong>Famous Persona Mode:</strong> Instantly impersonates any requested personality—reports, advice, or jokes in their style.</li>
         <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
         <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
         <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
-        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context[9][10].</li>
-        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun[10].</li>
+        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context.</li>
+        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun.</li>
         <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
       </ul>
       <blockquote>

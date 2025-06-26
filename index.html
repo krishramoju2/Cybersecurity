@@ -34,6 +34,9 @@
       nav ul { flex-direction: column; }
       nav ul li { margin: 8px 0; }
     }
+    .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
+    .manual-table th { background: #333; }
   </style>
 </head>
 <body class="theme-default">
@@ -43,6 +46,7 @@
   <nav>
     <ul>
       <li><a href="#about">About</a></li>
+      <li><a href="#manual">User Manual</a></li>
       <li><a href="#chat">Chat</a></li>
       <li><a href="#study">Study Tools</a></li>
       <li><a href="#mental">Mental Health</a></li>
@@ -61,6 +65,115 @@
       <p>
         InfinityBot is designed for global teams, students, developers, and anyone who needs a chatbot that remembers everything, adapts to your tone and mood, and offers a complete suite of productivity and wellness features. With infinite memory, multilingual mastery, screenshot-to-code, persona impersonation, and built-in mental health support, it’s the only AI companion you’ll ever need.
       </p>
+    </section>
+    <section id="manual">
+      <h2>User Manual: What You Can Search & Do with InfinityBot</h2>
+      <p>
+        InfinityBot is built to handle a wide variety of queries, tasks, and workflows. Use the table below to discover what you can ask or do, and how to get the most out of your experience.
+      </p>
+      <table class="manual-table">
+        <tr>
+          <th>Feature/Action</th>
+          <th>How to Use</th>
+          <th>Example Prompts/Queries</th>
+        </tr>
+        <tr>
+          <td>Infinite Context</td>
+          <td>Ask follow-up questions or refer to any previous conversation, even from past sessions. No need to repeat yourself.</td>
+          <td>
+            "What did I ask about JavaScript last week?"<br>
+            "Continue from our last discussion on GDPR."
+          </td>
+        </tr>
+        <tr>
+          <td>Multilingual Mastery</td>
+          <td>Request translations, converse in any major language, or ask for idiomatic/localized expressions.</td>
+          <td>
+            "Translate this to Japanese, but make it sound natural."<br>
+            "How do you say 'teamwork' in German?"<br>
+            "Respond in Spanish."
+          </td>
+        </tr>
+        <tr>
+          <td>Screenshot-to-Code/Query</td>
+          <td>Drag and drop a screenshot or upload an image for instant code, query, or UI analysis.</td>
+          <td>
+            "Here's a screenshot, generate the HTML/CSS for it."<br>
+            "Analyze this error message from my IDE."
+          </td>
+        </tr>
+        <tr>
+          <td>Emotion & Tone Control</td>
+          <td>Adjust the formality and emotional tone of responses using sliders. Bot detects frustration, sarcasm, and adapts automatically.</td>
+          <td>
+            "Make your answer more casual."<br>
+            "Respond with empathy."<br>
+            "Detect if I'm frustrated and offer help."
+          </td>
+        </tr>
+        <tr>
+          <td>Famous Persona Mode</td>
+          <td>Request responses in the style of any famous personality, hacker, or fictional character.</td>
+          <td>
+            "Explain this as Sun Tzu."<br>
+            "Summarize in the style of Mr. Robot."<br>
+            "Give advice like a DEFCON speaker."
+          </td>
+        </tr>
+        <tr>
+          <td>Cheat Sheets & Flashcards</td>
+          <td>Click to generate study aids from your chat history. Great for exam prep or quick review.</td>
+          <td>
+            "Make a cheat sheet from this session."<br>
+            "Create flashcards for these terms."
+          </td>
+        </tr>
+        <tr>
+          <td>Mental Health Support</td>
+          <td>Type about your stress or let the bot detect it. Access instant meditation or rage-quit therapy tools.</td>
+          <td>
+            "I'm feeling stressed."<br>
+            "Start a meditation session."<br>
+            "Help me calm down after a tough day."
+          </td>
+        </tr>
+        <tr>
+          <td>Timeline/History</td>
+          <td>Review, search, or jump to any previous prompt, answer, or session. Use the timeline to revisit your journey.</td>
+          <td>
+            "Show my chat history from last month."<br>
+            "Find my last question about Python."
+          </td>
+        </tr>
+        <tr>
+          <td>Customizable Themes</td>
+          <td>Switch between multiple UI themes for comfort, accessibility, or fun.</td>
+          <td>
+            "Change to cyberpunk theme."<br>
+            Use the 'Switch Theme' button.
+          </td>
+        </tr>
+        <tr>
+          <td>Advanced Stats & Diagnostics</td>
+          <td>Request detailed performance metrics, translation accuracy, or context retention stats.</td>
+          <td>
+            "Show me your performance stats."<br>
+            "How accurate was your last translation?"
+          </td>
+        </tr>
+      </table>
+      <h3>Best Practices & Tips</h3>
+      <ul>
+        <li>Be specific: The more detail you provide, the better the bot’s response.</li>
+        <li>Use persona and tone controls to match your audience or mood.</li>
+        <li>Leverage the timeline to revisit or build on past work—no need to start over.</li>
+        <li>Try mixing features: e.g., "Translate this, make it casual, and explain as Alan Turing."</li>
+        <li>For study, use cheat sheets and flashcards after any technical or factual discussion.</li>
+        <li>If you’re ever stuck, just ask, "What can you do?" for a refresher.</li>
+      </ul>
+      <blockquote>
+        InfinityBot is flexible, context-aware, and always evolving. Explore, experiment, and let it adapt to your workflow!
+      </blockquote>
     </section>
     <section id="chat">
       <h2>Chat Interface</h2>
@@ -135,7 +248,7 @@
     <section id="why-better">
       <h2>Why InfinityBot is Unmatched</h2>
       <ul>
-        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs.</li>
+        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs[9].</li>
         <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
         <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
         <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with sliders for user control.</li>
@@ -143,8 +256,8 @@
         <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
         <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
         <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
-        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context.</li>
-        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun.</li>
+        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context[9][10].</li>
+        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun[10].</li>
         <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
       </ul>
       <blockquote>

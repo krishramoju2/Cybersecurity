@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Assistant Pro</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --future: #9b59b6;
+            --timeline: #1abc9c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+            position: relative;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        
+        .chat-header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 10px 15px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            max-width: 80%;
+            position: relative;
+        }
+        
+        .user-message {
+            background-color: var(--accent);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        
+        .bot-message {
+            background-color: var(--light);
+            margin-right: auto;
+            border-bottom-left-radius: 0;
+            border: 1px solid #ddd;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            position: absolute;
+            bottom: 2px;
+            right: 8px;
+        }
+        
+        .user-message .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .bot-message .message-time {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        #send-button {
+            padding: 10px 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        #send-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            margin-right: auto;
+            border: 1px solid #ddd;
+            width: fit-content;
+        }
+        
+        .typing-dots {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            margin-right: 3px;
+            animation: typingAnimation 1.4s infinite both;
+        }
+        
+        .typing-dots:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dots:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Button styles */
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .help-button, .projects-button, .timeline-button, .language-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            z-index: 100;
+        }
+        
+        .projects-button {
+            background-color: var(--future);
+        }
+        
+        .timeline-button {
+            background-color: var(--timeline);
+        }
+        
+        .language-button {
+            background-color: var(--warning);
+        }
+        
+        .help-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .projects-button:hover {
+            background-color: #8e44ad;
+        }
+        
+        .timeline-button:hover {
+            background-color: #16a085;
+        }
+        
+        .language-button:hover {
+            background-color: #e67e22;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .modal-content h2 {
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+        }
+        
+        .section h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h3::before {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+        
+        .help-section h3::before {
+            content: "🔒";
+        }
+        
+        .project-section h3::before {
+            content: "🚀";
+        }
+        
+        .timeline-section h3::before {
+            content: "⏱️";
+        }
+        
+        .section ul {
+            padding-left: 20px;
+        }
+        
+        .section li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .section li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .close-modal {
+            float: right;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .close-modal:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Example prompts section */
+        .prompt-examples {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .prompt-examples h4 {
+            margin-top: 0;
+            color: var(--secondary);
+        }
+        
+        .prompt-examples ul {
+            padding-left: 20px;
+            list-style-type: none;
+        }
+        
+        .prompt-examples li {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background-color: white;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+            font-style: italic;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .prompt-examples li:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Project cards */
+        .project-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--future);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .project-card h4 {
+            margin-top: 0;
+            color: var(--future);
+            display: flex;
+            align-items: center;
+        }
+        
+        .project-card h4::before {
+            margin-right: 8px;
+        }
+        
+        .space-project h4::before {
+            content: "🛰️";
+        }
+        
+        .ocean-project h4::before {
+            content: "🌊";
+        }
+        
+        .finance-project h4::before {
+            content: "📈";
+        }
+        
+        .business-project h4::before {
+            content: "💼";
+        }
+        
+        .project-card p {
+            margin-bottom: 0;
+        }
+        
+        /* Timeline items */
+        .timeline-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--timeline);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .timeline-prompt {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .timeline-category {
+            background-color: var(--light);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        
+        .timeline-time {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-left: 10px;
+        }
+        
+        /* Language selector dropdown */
+        .language-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .language-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .language-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .language-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .language-dropdown:hover .language-dropdown-content {
+            display: block;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+                max-width: none;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .header-buttons {
+                top: 10px;
+                right: 10px;
+                flex-direction: column;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .timeline-category, .timeline-time {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="main-title">CyberSec Assistant Pro</h1>
+            <p id="subtitle">Advanced AI for cybersecurity professionals</p>
+            <div class="header-buttons">
+                <div class="language-dropdown">
+                    <button class="language-button" id="language-button">🌐 English</button>
+                    <div class="language-dropdown-content" id="language-dropdown">
+                        <a href="#" data-lang="en">English</a>
+                        <a href="#" data-lang="es">Español</a>
+                        <a href="#" data-lang="fr">Français</a>
+                        <a href="#" data-lang="de">Deutsch</a>
+                        <a href="#" data-lang="ja">日本語</a>
+                    </div>
+                </div>
+                <button class="timeline-button" id="timeline-button" data-i18n="timeline">Timeline</button>
+                <button class="projects-button" id="projects-button" data-i18n="projects">Future Projects</button>
+                <button class="help-button" id="help-button" data-i18n="help">Help & Topics</button>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2 id="chat-header">Security Operations Center</h2>
+                <span id="secure-session">Secure session active</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    <strong id="welcome-title">Welcome to CyberSec Assistant Pro</strong><br><br>
+                    <span id="welcome-text">I'm your AI-powered cybersecurity specialist with expertise in:<br>
+                    • Threat intelligence & analysis<br>
+                    • Incident response & forensics<br>
+                    • Vulnerability management<br>
+                    • Security operations & monitoring<br><br>
+                    Explore my capabilities using the buttons above.</span>
+                    <div class="message-time" id="response-time">Response time: 0.0s</div>
+                </div>
+            </div>
+            <div class="typing-indicator" id="typing-indicator">
+                <span class="typing-dots"></span>
+                <span class="typing-dots"></span>
+                <span class="typing-dots"></span>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Ask about threats, vulnerabilities, forensics, compliance..." autofocus data-i18n-placeholder="input_placeholder">
+                <button id="send-button" data-i18n="send">Send</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Help Modal -->
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <h2 id="help-title">CyberSec Assistant Pro - Capabilities</h2>
+            <p id="help-intro">I specialize in comprehensive cybersecurity support across all major domains:</p>
+            
+            <div class="section help-section">
+                <h3 id="threat-title">Threat Intelligence & Analysis</h3>
+                <ul id="threat-list">
+                    <li>Advanced threat actor profiling and TTPs</li>
+                    <li>Indicators of Compromise (IOCs) analysis</li>
+                    <li>Malware analysis and reverse engineering insights</li>
+                    <li>Attack vector identification and mitigation</li>
+                    <li>Threat hunting methodologies and queries</li>
+                </ul>
+            </div>
+            
+            <div class="section help-section">
+                <h3 id="incident-title">Incident Response & Digital Forensics</h3>
+                <ul id="incident-list">
+                    <li>End-to-end incident response procedures</li>
+                    <li>Containment strategies for various attack types</li>
+                    <li>Forensic investigation techniques (disk, memory, network)</li>
+                    <li>Evidence collection, preservation, and chain of custody</li>
+                    <li>Malware triage and analysis</li>
+                </ul>
+            </div>
+            
+            <div class="section help-section">
+                <h3 id="vulnerability-title">Vulnerability Management</h3>
+                <ul id="vulnerability-list">
+                    <li>CVE analysis, scoring, and prioritization</li>
+                    <li>Vulnerability scanning best practices</li>
+                    <li>Patch management strategies and scheduling</li>
+                    <li>Risk assessment methodologies (CVSS, EPSS)</li>
+                    <li>Remediation planning and tracking</li>
+                </ul>
+            </div>
+            
+            <div class="section help-section">
+                <h3 id="operations-title">Security Operations</h3>
+                <ul id="operations-list">
+                    <li>SIEM query development and optimization</li>
+                    <li>Advanced log analysis techniques</li>
+                    <li>Alert triage and investigation procedures</li>
+                    <li>Use case development and tuning</li>
+                    <li>Security monitoring best practices</li>
+                </ul>
+            </div>
+            
+            <div class="prompt-examples">
+                <h4 id="examples-title">Example Prompts:</h4>
+                <ul id="example-prompts">
+                    <li id="prompt1">"How should I investigate a potential ransomware incident?"</li>
+                    <li id="prompt2">"Create a detection rule for credential dumping"</li>
+                    <li id="prompt3">"What's the risk of CVE-2023-1234 in our environment?"</li>
+                    <li id="prompt4">"Walk me through containing a compromised cloud workload"</li>
+                    <li id="prompt5">"Explain the MITRE ATT&CK technique T1059.001"</li>
+                </ul>
+            </div>
+            
+            <button class="close-modal" id="close-help" data-i18n="close">Close</button>
+        </div>
+    </div>
+    
+    <!-- Projects Modal -->
+    <div class="modal" id="projects-modal">
+        <div class="modal-content">
+            <h2 id="projects-title">Upcoming Projects</h2>
+            <p id="projects-intro">Here are some exciting AI projects currently in development:</p>
+            
+            <div class="project-card space-project">
+                <h4 id="space-title">Space Exploration Chatbot</h4>
+                <p id="space-desc">An AI assistant specializing in space science, astronomy, and astrophysics. Features will include real-time satellite tracking, celestial event notifications, and interactive space mission simulations.</p>
+                <p><strong id="space-tech">Key Technologies:</strong> NASA API integration, 3D celestial visualization, astrophysics knowledge base</p>
+            </div>
+            
+            <div class="project-card ocean-project">
+                <h4 id="ocean-title">Deep Sea Exploration Assistant</h4>
+                <p id="ocean-desc">An AI tool for marine biologists and oceanographers that provides information on marine ecosystems, identifies species from images, and analyzes oceanographic data patterns.</p>
+                <p><strong id="ocean-features">Key Features:</strong> Sonar data interpretation, marine life database, underwater archaeology support</p>
+            </div>
+            
+            <div class="project-card finance-project">
+                <h4 id="finance-title">Stock Market Prediction Engine</h4>
+                <p id="finance-desc">Advanced financial AI that analyzes market trends, news sentiment, and technical indicators to provide probabilistic forecasts and trading strategy suggestions.</p>
+                <p><strong id="finance-capabilities">Capabilities:</strong> Real-time market analysis, portfolio risk assessment, anomaly detection</p>
+            </div>
+            
+            <div class="project-card business-project">
+                <h4 id="business-title">Business News Generator</h4>
+                <p id="business-desc">An AI system that synthesizes financial reports, market data, and economic indicators to generate insightful business news summaries and executive briefings.</p>
+                <p><strong id="business-features">Features:</strong> Earnings call analysis, industry trend reports, competitor intelligence</p>
+            </div>
+            
+            <div class="project-card">
+                <h4 id="additional-title">Additional Planned Projects</h4>
+                <p><strong id="medical-title">Medical Diagnosis Assistant:</strong> <span id="medical-desc">AI support for healthcare professionals with symptom analysis and treatment recommendations</span></p>
+                <p><strong id="climate-title">Climate Change Analyzer:</strong> <span id="climate-desc">Tracking and predicting environmental changes with interactive models</span></p>
+                <p><strong id="legal-title">Legal Research Bot:</strong> <span id="legal-desc">Case law analysis and legal document generation</span></p>
+            </div>
+            
+            <button class="close-modal" id="close-projects" data-i18n="close">Close</button>
+        </div>
+    </div>
+    
+    <!-- Timeline Modal -->
+    <div class="modal" id="timeline-modal">
+        <div class="modal-content">
+            <h2 id="timeline-title">Conversation Timeline</h2>
+            <p id="timeline-intro">Review your conversation history with categorized prompts:</p>
+            
+            <div class="section timeline-section">
+                <h3 id="timeline-categories">Prompt Categories</h3>
+                <div id="timeline-items">
+                    <!-- Timeline items will be added here dynamically -->
+                    <div class="timeline-item">
+                        <div class="timeline-prompt">Welcome message</div>
+                        <div class="timeline-category">System</div>
+                        <div class="timeline-time" id="just-now">Just now</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="close-modal" id="close-timeline" data-i18n="close">Close</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p id="footer-text">CyberSec Assistant Pro v2.0 | For authorized personnel only | All interactions are confidential</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const helpButton = document.getElementById('help-button');
+            const projectsButton = document.getElementById('projects-button');
+            const timelineButton = document.getElementById('timeline-button');
+            const languageButton = document.getElementById('language-button');
+            const helpModal = document.getElementById('help-modal');
+            const projectsModal = document.getElementById('projects-modal');
+            const timelineModal = document.getElementById('timeline-modal');
+            const closeHelp = document.getElementById('close-help');
+            const closeProjects = document.getElementById('close-projects');
+            const closeTimeline = document.getElementById('close-timeline');
+            const examplePrompts = document.getElementById('example-prompts');
+            const timelineItems = document.getElementById('timeline-items');
+            const languageDropdown = document.getElementById('language-dropdown');
+            
+            // Current language (default to English)
+            let currentLanguage = 'en';
+            
+            // Translation dictionary
+            const translations = {
+                en: {
+                    // UI Elements
+                    "main-title": "CyberSec Assistant Pro",
+                    "subtitle": "Advanced AI for cybersecurity professionals",
+                    "chat-header": "Security Operations Center",
+                    "secure-session": "Secure session active",
+                    "welcome-title": "Welcome to CyberSec Assistant Pro",
+                    "welcome-text": "I'm your AI-powered cybersecurity specialist with expertise in:<br>• Threat intelligence & analysis<br>• Incident response & forensics<br>• Vulnerability management<br>• Security operations & monitoring<br><br>Explore my capabilities using the buttons above.",
+                    "response-time": "Response time: 0.0s",
+                    "input_placeholder": "Ask about threats, vulnerabilities, forensics, compliance...",
+                    "send": "Send",
+                    "help": "Help & Topics",
+                    "projects": "Future Projects",
+                    "timeline": "Timeline",
+                    "close": "Close",
+                    "just-now": "Just now",
+                    "footer-text": "CyberSec Assistant Pro v2.0 | For authorized personnel only | All interactions are confidential",
+                    
+                    // Help Modal
+                    "help-title": "CyberSec Assistant Pro - Capabilities",
+                    "help-intro": "I specialize in comprehensive cybersecurity support across all major domains:",
+                    "threat-title": "Threat Intelligence & Analysis",
+                    "threat-list": [
+                        "Advanced threat actor profiling and TTPs",
+                        "Indicators of Compromise (IOCs) analysis",
+                        "Malware analysis and reverse engineering insights",
+                        "Attack vector identification and mitigation",
+                        "Threat hunting methodologies and queries"
+                    ],
+                    "incident-title": "Incident Response & Digital Forensics",
+                    "incident-list": [
+                        "End-to-end incident response procedures",
+                        "Containment strategies for various attack types",
+                        "Forensic investigation techniques (disk, memory, network)",
+                        "Evidence collection, preservation, and chain of custody",
+                        "Malware triage and analysis"
+                    ],
+                    "vulnerability-title": "Vulnerability Management",
+                    "vulnerability-list": [
+                        "CVE analysis, scoring, and prioritization",
+                        "Vulnerability scanning best practices",
+                        "Patch management strategies and scheduling",
+                        "Risk assessment methodologies (CVSS, EPSS)",
+                        "Remediation planning and tracking"
+                    ],
+                    "operations-title": "Security Operations",
+                    "operations-list": [
+                        "SIEM query development and optimization",
+                        "Advanced log analysis techniques",
+                        "Alert triage and investigation procedures",
+                        "Use case development and tuning",
+                        "Security monitoring best practices"
+                    ],
+                    "examples-title": "Example Prompts:",
+                    "prompt1": "\"How should I investigate a potential ransomware incident?\"",
+                    "prompt2": "\"Create a detection rule for credential dumping\"",
+                    "prompt3": "\"What's the risk of CVE-2023-1234 in our environment?\"",
+                    "prompt4": "\"Walk me through containing a compromised cloud workload\"",
+                    "prompt5": "\"Explain the MITRE ATT&CK technique T1059.001\"",
+                    
+                    // Projects Modal
+                    "projects-title": "Upcoming Projects",
+                    "projects-intro": "Here are some exciting AI projects currently in development:",
+                    "space-title": "Space Exploration Chatbot",
+                    "space-desc": "An AI assistant specializing in space science, astronomy, and astrophysics. Features will include real-time satellite tracking, celestial event notifications, and interactive space mission simulations.",
+                    "space-tech": "Key Technologies:",
+                    "ocean-title": "Deep Sea Exploration Assistant",
+                    "ocean-desc": "An AI tool for marine biologists and oceanographers that provides information on marine ecosystems, identifies species from images, and analyzes oceanographic data patterns.",
+                    "ocean-features": "Key Features:",
+                    "finance-title": "Stock Market Prediction Engine",
+                    "finance-desc": "Advanced financial AI that analyzes market trends, news sentiment, and technical indicators to provide probabilistic forecasts and trading strategy suggestions.",
+                    "finance-capabilities": "Capabilities:",
+                    "business-title": "Business News Generator",
+                    "business-desc": "An AI system that synthesizes financial reports, market data, and economic indicators to generate insightful business news summaries and executive briefings.",
+                    "business-features": "Features:",
+                    "additional-title": "Additional Planned Projects",
+                    "medical-title": "Medical Diagnosis Assistant:",
+                    "medical-desc": "AI support for healthcare professionals with symptom analysis and treatment recommendations",
+                    "climate-title": "Climate Change Analyzer:",
+                    "climate-desc": "Tracking and predicting environmental changes with interactive models",
+                    "legal-title": "Legal Research Bot:",
+                    "legal-desc": "Case law analysis and legal document generation",
+                    
+                    // Timeline Modal
+                    "timeline-title": "Conversation Timeline",
+                    "timeline-intro": "Review your conversation history with categorized prompts:",
+                    "timeline-categories": "Prompt Categories"
+                },
+                es: {
+                    // UI Elements
+                    "main-title": "Asistente de Ciberseguridad Pro",
+                    "subtitle": "IA avanzada para profesionales de seguridad",
+                    "chat-header": "Centro de Operaciones de Seguridad",
+                    "secure-session": "Sesión segura activa",
+                    "welcome-title": "Bienvenido al Asistente de Ciberseguridad Pro",
+                    "welcome-text": "Soy tu especialista en ciberseguridad con IA, experto en:<br>• Inteligencia y análisis de amenazas<br>• Respuesta a incidentes y forense<br>• Gestión de vulnerabilidades<br>• Operaciones de seguridad<br><br>Explora mis capacidades usando los botones superiores.",
+                    "response-time": "Tiempo de respuesta: 0.0s",
+                    "input_placeholder": "Pregunta sobre amenazas, vulnerabilidades, forense, cumplimiento...",
+                    "send": "Enviar",
+                    "help": "Ayuda y Temas",
+                    "projects": "Proyectos Futuros",
+                    "timeline": "Línea de Tiempo",
+                    "close": "Cerrar",
+                    "just-now": "Ahora mismo",
+                    "footer-text": "Asistente de Ciberseguridad Pro v2.0 | Solo para personal autorizado | Todas las interacciones son confidenciales",
+                    
+                    // Help Modal
+                    "help-title": "Asistente de Ciberseguridad Pro - Capacidades",
+                    "help-intro": "Especializado en soporte integral de ciberseguridad en todas las áreas principales:",
+                    "threat-title": "Inteligencia y Análisis de Amenazas",
+                    "threat-list": [
+                        "Perfilado avanzado de actores de amenaza y TTPs",
+                        "Análisis de Indicadores de Compromiso (IOCs)",
+                        "Análisis de malware e ingeniería inversa",
+                        "Identificación y mitigación de vectores de ataque",
+                        "Metodologías y consultas de threat hunting"
+                    ],
+                    "incident-title": "Respuesta a Incidentes y Forense Digital",
+                    "incident-list": [
+                        "Procedimientos completos de respuesta a incidentes",
+                        "Estrategias de contención para diferentes tipos de ataques",
+                        "Técnicas de investigación forense (disco, memoria, red)",
+                        "Recolección y preservación de evidencia",
+                        "Triaje y análisis de malware"
+                    ],
+                    "vulnerability-title": "Gestión de Vulnerabilidades",
+                    "vulnerability-list": [
+                        "Análisis, puntuación y priorización de CVEs",
+                        "Mejores prácticas de escaneo de vulnerabilidades",
+                        "Estrategias de gestión de parches",
+                        "Metodologías de evaluación de riesgo (CVSS, EPSS)",
+                        "Planificación y seguimiento de remediación"
+                    ],
+                    "operations-title": "Operaciones de Seguridad",
+                    "operations-list": [
+                        "Desarrollo y optimización de consultas SIEM",
+                        "Técnicas avanzadas de análisis de logs",
+                        "Procedimientos de triaje e investigación de alertas",
+                        "Desarrollo y ajuste de casos de uso",
+                        "Mejores prácticas de monitoreo de seguridad"
+                    ],
+                    "examples-title": "Ejemplos de Preguntas:",
+                    "prompt1": "\"¿Cómo debo investigar un posible incidente de ransomware?\"",
+                    "prompt2": "\"Crea una regla de detección para credential dumping\"",
+                    "prompt3": "\"¿Cuál es el riesgo de CVE-2023-1234 en nuestro entorno?\"",
+                    "prompt4": "\"Guíame a través de la contención de una carga de trabajo comprometida en la nube\"",
+                    "prompt5": "\"Explica la técnica MITRE ATT&CK T1059.001\"",
+                    
+                    // Projects Modal
+                    "projects-title": "Próximos Proyectos",
+                    "projects-intro": "Estos son algunos proyectos emocionantes actualmente en desarrollo:",
+                    "space-title": "Chatbot de Exploración Espacial",
+                    "space-desc": "Un asistente de IA especializado en ciencia espacial, astronomía y astrofísica. Incluirá seguimiento de satélites en tiempo real, notificaciones de eventos celestes y simulaciones interactivas de misiones espaciales.",
+                    "space-tech": "Tecnologías Clave:",
+                    "ocean-title": "Asistente de Exploración Marina",
+                    "ocean-desc": "Una herramienta de IA para biólogos marinos y oceanógrafos que proporciona información sobre ecosistemas marinos, identifica especies de imágenes y analiza patrones de datos oceanográficos.",
+                    "ocean-features": "Características Clave:",
+                    "finance-title": "Motor de Predicción de Mercados",
+                    "finance-desc": "IA financiera avanzada que analiza tendencias del mercado, sentimiento de noticias e indicadores técnicos para proporcionar pronósticos probabilísticos y sugerencias de estrategias de trading.",
+                    "finance-capabilities": "Capacidades:",
+                    "business-title": "Generador de Noticias Empresariales",
+                    "business-desc": "Un sistema de IA que sintetiza informes financieros, datos de mercado e indicadores económicos para generar resúmenes de noticias empresariales e informes ejecutivos.",
+                    "business-features": "Características:",
+                    "additional-title": "Proyectos Adicionales Planificados",
+                    "medical-title": "Asistente de Diagnóstico Médico:",
+                    "medical-desc": "Soporte de IA para profesionales de la salud con análisis de síntomas y recomendaciones de tratamiento",
+                    "climate-title": "Analizador de Cambio Climático:",
+                    "climate-desc": "Seguimiento y predicción de cambios ambientales con modelos interactivos",
+                    "legal-title": "Bot de Investigación Legal:",
+                    "legal-desc": "Análisis de jurisprudencia y generación de documentos legales"
+                },
+                fr: {
+                    // UI Elements
+                    "main-title": "Assistant Cybersécurité Pro",
+                    "subtitle": "IA avancée pour les professionnels de la sécurité",
+                    "chat-header": "Centre des Opérations de Sécurité",
+                    "secure-session": "Session sécurisée active",
+                    "welcome-title": "Bienvenue dans l'Assistant Cybersécurité Pro",
+                    "welcome-text": "Je suis votre spécialiste en cybersécurité alimenté par IA, expert en:<br>• Intelligence et analyse des menaces<br>• Réponse aux incidents et forensique<br>• Gestion des vulnérabilités<br>• Opérations de sécurité<br><br>Explorez mes capacités en utilisant les boutons ci-dessus.",
+                    "response-time": "Temps de réponse: 0.0s",
+                    "input_placeholder": "Posez des questions sur les menaces, vulnérabilités, forensique, conformité...",
+                    "send": "Envoyer",
+                    "help": "Aide & Sujets",
+                    "projects": "Projets Futurs",
+                    "timeline": "Chronologie",
+                    "close": "Fermer",
+                    "just-now": "À l'instant",
+                    "footer-text": "Assistant Cybersécurité Pro v2.0 | Réservé au personnel autorisé | Toutes les interactions sont confidentielles",
+                    
+                    // Help Modal
+                    "help-title": "Assistant Cybersécurité Pro - Capacités",
+                    "help-intro": "Je me spécialise dans le support complet de cybersécurité dans tous les domaines principaux:",
+                    "threat-title": "Intelligence et Analyse des Menaces",
+                    "threat-list": [
+                        "Profilage avancé des acteurs de menace et TTPs",
+                        "Analyse des Indicateurs de Compromission (IOCs)",
+                        "Analyse de malware et rétro-ingénierie",
+                        "Identification et mitigation des vecteurs d'attaque",
+                        "Méthodologies et requêtes de chasse aux menaces"
+                    ],
+                    "incident-title": "Réponse aux Incidents et Forensique Numérique",
+                    "incident-list": [
+                        "Procédures complètes de réponse aux incidents",
+                        "Stratégies de confinement pour différents types d'attaques",
+                        "Techniques d'investigation forensique (disque, mémoire, réseau)",
+                        "Collecte et préservation des preuves",
+                        "Tri et analyse de malware"
+                    ],
+                    "vulnerability-title": "Gestion des Vulnérabilités",
+                    "vulnerability-list": [
+                        "Analyse, notation et priorisation des CVEs",
+                        "Meilleures pratiques de scan de vulnérabilités",
+                        "Stratégies de gestion des correctifs",
+                        "Méthodologies d'évaluation des risques (CVSS, EPSS)",
+                        "Planification et suivi des corrections"
+                    ],
+                    "operations-title": "Opérations de Sécurité",
+                    "operations-list": [
+                        "Développement et optimisation de requêtes SIEM",
+                        "Techniques avancées d'analyse de logs",
+                        "Procédures de tri et d'investigation des alertes",
+                        "Développement et ajustement des cas d'usage",
+                        "Meilleures pratiques de surveillance de sécurité"
+                    ],
+                    "examples-title": "Exemples de Questions:",
+                    "prompt1": "\"Comment dois-je enquêter sur un incident ransomware potentiel ?\"",
+                    "prompt2": "\"Créez une règle de détection pour le credential dumping\"",
+                    "prompt3": "\"Quel est le risque de CVE-2023-1234 dans notre environnement ?\"",
+                    "prompt4": "\"Guidez-moi à travers le confinement d'une charge de travail cloud compromise\"",
+                    "prompt5": "\"Expliquez la technique MITRE ATT&CK T1059.001\"",
+                    
+                    // Projects Modal
+                    "projects-title": "Projets à Venir",
+                    "projects-intro": "Voici quelques projets passionnants actuellement en développement:",
+                    "space-title": "Chatbot d'Exploration Spatiale",
+                    "space-desc": "Un assistant IA spécialisé en sciences spatiales, astronomie et astrophysique. Fonctionnalités incluant le suivi de satellites en temps réel, notifications d'événements célestes et simulations interactives de missions spatiales.",
+                    "space-tech": "Technologies Clés:",
+                    "ocean-title": "Assistant d'Exploration Sous-Marine",
+                    "ocean-desc": "Un outil IA pour les biologistes marins et océanographes fournissant des informations sur les écosystèmes marins, identifiant des espèces à partir d'images et analysant des modèles de données océanographiques.",
+                    "ocean-features": "Fonctionnalités Clés:",
+                    "finance-title": "Moteur de Prédiction Boursière",
+                    "finance-desc": "IA financière avancée analysant les tendances du marché, le sentiment des actualités et les indicateurs techniques pour fournir des prévisions probabilistes et des suggestions de stratégies de trading.",
+                    "finance-capabilities": "Capacités:",
+                    "business-title": "Générateur d'Actualités Économiques",
+                    "business-desc": "Un système IA synthétisant rapports financiers, données de marché et indicateurs économiques pour générer des résumés d'actualités économiques et des briefings exécutifs.",
+                    "business-features": "Fonctionnalités:",
+                    "additional-title": "Projets Supplémentaires Prévus",
+                    "medical-title": "Assistant de Diagnostic Médical:",
+                    "medical-desc": "Support IA pour les professionnels de santé avec analyse des symptômes et recommandations de traitement",
+                    "climate-title": "Analyseur de Changement Climatique:",
+                    "climate-desc": "Suivi et prédiction des changements environnementaux avec modèles interactifs",
+                    "legal-title": "Bot de Recherche Juridique:",
+                    "legal-desc": "Analyse de jurisprudence et génération de documents légaux"
+                },
+                de: {
+                    // UI Elements
+                    "main-title": "CyberSec Assistent Pro",
+                    "subtitle": "Fortgeschrittene KI für Sicherheitsexperten",
+                    "chat-header": "Sicherheitsbetriebszentrum",
+                    "secure-session": "Sichere Sitzung aktiv",
+                    "welcome-title": "Willkommen beim CyberSec Assistent Pro",
+                    "welcome-text": "Ich bin Ihr KI-gestützter Cybersicherheitsspezialist mit Expertise in:<br>• Bedrohungsanalyse und -intelligenz<br>• Incident Response und Forensik<br>• Schwachstellenmanagement<br>• Sicherheitsoperationen<br><br>Entdecken Sie meine Fähigkeiten mit den obigen Schaltflächen.",
+                    "response-time": "Antwortzeit: 0.0s",
+                    "input_placeholder": "Fragen Sie nach Bedrohungen, Schwachstellen, Forensik, Compliance...",
+                    "send": "Senden",
+                    "help": "Hilfe & Themen",
+                    "projects": "Zukünftige Projekte",
+                    "timeline": "Zeitplan",
+                    "close": "Schließen",
+                    "just-now": "Gerade eben",
+                    "footer-text": "CyberSec Assistent Pro v2.0 | Nur für autorisiertes Personal | Alle Interaktionen sind vertraulich",
+                    
+                    // Help Modal
+                    "help-title": "CyberSec Assistent Pro - Fähigkeiten",
+                    "help-intro": "Ich bin spezialisiert auf umfassende Cybersicherheitsunterstützung in allen wichtigen Bereichen:",
+                    "threat-title": "Bedrohungsanalyse und -intelligenz",
+                    "threat-list": [
+                        "Fortgeschrittene Profilerstellung von Bedrohungsakteuren und TTPs",
+                        "Analyse von Indikatoren für Kompromittierung (IOCs)",
+                        "Malware-Analyse und Reverse-Engineering-Einblicke",
+                        "Identifizierung und Eindämmung von Angriffsvektoren",
+                        "Methoden und Abfragen für die Bedrohungsjagd"
+                    ],
+                    "incident-title": "Incident Response und digitale Forensik",
+                    "incident-list": [
+                        "End-to-End-Incident-Response-Verfahren",
+                        "Eindämmungsstrategien für verschiedene Angriffsarten",
+                        "Forensische Untersuchungstechniken (Festplatte, Speicher, Netzwerk)",
+                        "Sicherung und Aufbewahrung von Beweismitteln",
+                        "Malware-Triage und -Analyse"
+                    ],
+                    "vulnerability-title": "Schwachstellenmanagement",
+                    "vulnerability-list": [
+                        "CVE-Analyse, Bewertung und Priorisierung",
+                        "Bewährte Verfahren für Schwachstellenscans",
+                        "Patch-Management-Strategien und -Planung",
+                        "Risikobewertungsmethoden (CVSS, EPSS)",
+                        "Planung und Nachverfolgung von Abhilfemaßnahmen"
+                    ],
+                    "operations-title": "Sicherheitsoperationen",
+                    "operations-list": [
+                        "Entwicklung und Optimierung von SIEM-Abfragen",
+                        "Fortgeschrittene Log-Analyse-Techniken",
+                        "Alarmtriage und Untersuchungsverfahren",
+                        "Use-Case-Entwicklung und -Optimierung",
+                        "Bewährte Verfahren für die Sicherheitsüberwachung"
+                    ],
+                    "examples-title": "Beispielanfragen:",
+                    "prompt1": "\"Wie sollte ich einen möglichen Ransomware-Vorfall untersuchen?\"",
+                    "prompt2": "\"Erstellen Sie eine Erkennungsregel für Credential Dumping\"",
+                    "prompt3": "\"Wie hoch ist das Risiko von CVE-2023-1234 in unserer Umgebung?\"",
+                    "prompt4": "\"Führen Sie mich durch die Eindämmung einer kompromittierten Cloud-Workload\"",
+                    "prompt5": "\"Erklären Sie die MITRE ATT&CK-Technik T1059.001\"",
+                    
+                    // Projects Modal
+                    "projects-title": "Kommende Projekte",
+                    "projects-intro": "Hier sind einige spannende KI-Projekte, die derzeit in Entwicklung sind:",
+                    "space-title": "Chatbot für Weltraumforschung",
+                    "space-desc": "Ein KI-Assistent für Weltraumwissenschaften, Astronomie und Astrophysik. Funktionen umfassen Echtzeit-Satellitenverfolgung, Benachrichtigungen über Himmelsereignisse und interaktive Weltraummissionssimulationen.",
+                    "space-tech": "Schlüsseltechnologien:",
+                    "ocean-title": "Assistent für Tiefseeforschung",
+                    "ocean-desc": "Ein KI-Tool für Meeresbiologen und Ozeanographen, das Informationen über marine Ökosysteme liefert, Arten anhand von Bildern identifiziert und ozeanographische Datenmuster analysiert.",
+                    "ocean-features": "Hauptmerkmale:",
+                    "finance-title": "Börsenvorhersage-Engine",
+                    "finance-desc": "Fortgeschrittene Finanz-KI, die Markttrends, Nachrichten-Stimmung und technische Indikatoren analysiert, um probabilistische Prognosen und Handelsstrategieempfehlungen zu liefern.",
+                    "finance-capabilities": "Fähigkeiten:",
+                    "business-title": "Generator für Wirtschaftsnachrichten",
+                    "business-desc": "Ein KI-System, das Finanzberichte, Marktdaten und Wirtschaftsindikatoren synthetisiert, um aufschlussreiche Wirtschaftsnachrichtenzusammenfassungen und Executive Briefings zu generieren.",
+                    "business-features": "Funktionen:",
+                    "additional-title": "Weitere geplante Projekte",
+                    "medical-title": "Assistent für medizinische Diagnose:",
+                    "medical-desc": "KI-Unterstützung für medizinische Fachkräfte mit Symptomanalyse und Behandlungsempfehlungen",
+                    "climate-title": "Analyse-Tool für Klimawandel:",
+                    "climate-desc": "Verfolgung und Vorhersage von Umweltveränderungen mit interaktiven Modellen",
+                    "legal-title": "Rechtsrecherche-Bot:",
+                    "legal-desc": "Fallrechtsanalyse und Erstellung juristischer Dokumente"
+                },
+                ja: {
+                    // UI Elements
+                    "main-title": "サイバーセキュリティアシスタント Pro",
+                    "subtitle": "セキュリティ専門家向けの高度なAI",
+                    "chat-header": "セキュリティオペレーションセンター",
+                    "secure-session": "セキュアセッション有効",
+                    "welcome-title": "サイバーセキュリティアシスタント Proへようこそ",
+                    "welcome-text": "私はAIを活用したサイバーセキュリティの専門家で、以下の分野に精通しています:<br>• 脅威インテリジェンスと分析<br>• インシデント対応とフォレンジック<br>• 脆弱性管理<br>• セキュリティオペレーション<br><br>上部のボタンから機能を探索してください。",
+                    "response-time": "応答時間: 0.0秒",
+                    "input_placeholder": "脅威、脆弱性、フォレンジック、コンプライアンスについて質問...",
+                    "send": "送信",
+                    "help": "ヘルプ & トピック",
+                    "projects": "将来のプロジェクト",
+                    "timeline": "タイムライン",
+                    "close": "閉じる",
+                    "just-now": "たった今",
+                    "footer-text": "サイバーセキュリティアシスタント Pro v2.0 | 許可された担当者のみ | すべてのやり取りは機密扱い",
+                    
+                    // Help Modal
+                    "help-title": "サイバーセキュリティアシスタント Pro - 機能",
+                    "help-intro": "私はすべての主要な分野で包括的なサイバーセキュリティサポートを専門としています:",
+                    "threat-title": "脅威インテリジェンスと分析",
+                    "threat-list": [
+                        "脅威アクターの高度なプロファイリングとTTPs",
+                        "侵害指標(IOC)の分析",
+                        "マルウェア分析とリバースエンジニアリングの洞察",
+                        "攻撃ベクトルの特定と緩和",
+                        "脅威ハンティングの方法論とクエリ"
+                    ],
+                    "incident-title": "インシデント対応とデジタルフォレンジック",
+                    "incident-list": [
+                        "エンドツーエンドのインシデント対応手順",
+                        "さまざまな攻撃タイプの封じ込め戦略",
+                        "フォレンジック調査技術(ディスク、メモリ、ネットワーク)",
+                        "証拠の収集、保存、およびチェーンオブカストディ",
+                        "マルウェアのトリアージと分析"
+                    ],
+                    "vulnerability-title": "脆弱性管理",
+                    "vulnerability-list": [
+                        "CVE分析、スコアリング、優先順位付け",
+                        "脆弱性スキャンのベストプラクティス",
+                        "パッチ管理戦略とスケジューリング",
+                        "リスク評価方法論(CVSS、EPSS)",
+                        "修復計画と追跡"
+                    ],
+                    "operations-title": "セキュリティオペレーション",
+                    "operations-list": [
+                        "SIEMクエリの開発と最適化",
+                        "高度なログ分析技術",
+                        "アラートトリアージと調査手順",
+                        "ユースケースの開発とチューニング",
+                        "セキュリティ監視のベストプラクティス"
+                    ],
+                    "examples-title": "質問の例:",
+                    "prompt1": "\"ランサムウェアインシデントの可能性をどのように調査すべきですか？\"",
+                    "prompt2": "\"クレデンシャルダンピングの検出ルールを作成してください\"",
+                    "prompt3": "\"CVE-2023-1234の当社環境におけるリスクは何ですか？\"",
+                    "prompt4": "\"侵害されたクラウドワークロードの封じ込め手順を説明してください\"",
+                    "prompt5": "\"MITRE ATT&CKテクニックT1059.001について説明してください\"",
+                    
+                    // Projects Modal
+                    "projects-title": "今後のプロジェクト",
+                    "projects-intro": "現在開発中のエキサイティングなAIプロジェクトをご紹介します:",
+                    "space-title": "宇宙探査チャットボット",
+                    "space-desc": "宇宙科学、天文学、天体物理学に特化したAIアシスタント。リアルタイムの衛星追跡、天体イベント通知、インタラクティブな宇宙ミッションシミュレーションなどの機能を備えます。",
+                    "space-tech": "主要技術:",
+                    "ocean-title": "深海探査アシスタント",
+                    "ocean-desc": "海洋生物学者や海洋学者向けのAIツールで、海洋生態系に関する情報を提供し、画像から種を識別し、海洋データパターンを分析します。",
+                    "ocean-features": "主な機能:",
+                    "finance-title": "株式市場予測エンジン",
+                    "finance-desc": "市場動向、ニュースセンチメント、テクニカル指標を分析して確率的予測と取引戦略の提案を提供する高度な金融AI。",
+                    "finance-capabilities": "機能:",
+                    "business-title": "ビジネスニュースジェネレーター",
+                    "finance-desc": "財務報告書、市場データ、経済指標を統合して洞察に富むビジネスニュースの要約とエグゼクティブブリーフィングを生成するAIシステム。",
+                    "business-features": "特徴:",
+                    "additional-title": "その他の計画プロジェクト",
+                    "medical-title": "医療診断アシスタント:",
+                    "medical-desc": "症状分析と治療推奨を提供する医療専門家向けAIサポート",
+                    "climate-title": "気候変動アナライザー:",
+                    "climate-desc": "インタラクティブなモデルによる環境変化の追跡と予測",
+                    "legal-title": "法律調査ボット:",
+                    "legal-desc": "判例分析と法律文書生成"
+                }
+            };
+            
+            // Function to apply translations
+            function applyTranslations(lang) {
+                const langData = translations[lang];
+                
+                // Update all elements with data-i18n attribute
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (langData[key]) {
+                        el.textContent = langData[key];
+                    }
+                });
+                
+                // Update all elements with data-i18n-placeholder attribute
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    if (langData[key]) {
+                        el.setAttribute('placeholder', langData[key]);
+                    }
+                });
+                
+                // Update elements with IDs
+                for (const [key, value] of Object.entries(langData)) {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        if (Array.isArray(value)) {
+                            // Handle lists (like in help modal)
+                            const items = element.querySelectorAll('li');
+                            value.forEach((item, index) => {
+                                if (items[index]) {
+                                    items[index].textContent = item;
+                                }
+                            });
+                        } else if (key.includes('-desc') || key.includes('-features') || key.includes('-capabilities') || key.includes('-tech')) {
+                            // Handle description texts after strong elements
+                            const parent = element.parentElement;
+                            if (parent) {
+                                const strong = parent.querySelector('strong');
+                                if (strong) {
+                                    strong.textContent = langData[key.replace('-desc', '-title').replace('-features', '-title').replace('-capabilities', '-title').replace('-tech', '-title')] + (key.includes('-desc') ? ':' : '');
+                                    element.textContent = value;
+                                }
+                            }
+                        } else {
+                            // Handle regular text content
+                            element.textContent = value;
+                            
+                            // Special case for welcome text which contains HTML
+                            if (key === 'welcome-text') {
+                                element.innerHTML = value;
+                            }
+                        }
+                    }
+                }
+                
+                // Update language button text
+                const langButtonText = {
+                    en: "🌐 English",
+                    es: "🌐 Español",
+                    fr: "🌐 Français",
+                    de: "🌐 Deutsch",
+                    ja: "🌐 日本語"
+                };
+                languageButton.textContent = langButtonText[lang];
+                
+                // Update current language
+                currentLanguage = lang;
+            }
+            
+            // Initialize with English
+            applyTranslations('en');
+            
+            // Language selector event listeners
+            document.querySelectorAll('#language-dropdown a').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    applyTranslations(lang);
+                });
+            });
+            
+            // Conversation tracking
+            let conversationHistory = [
+                {
+                    role: "system",
+                    content: "You are a highly skilled cybersecurity assistant specialized in helping security professionals with their daily tasks. You provide accurate, up-to-date information on threats, vulnerabilities, incident response, and security best practices. You always think step by step and explain concepts clearly. You ask clarifying questions when needed and never provide harmful advice.",
+                    timestamp: new Date(),
+                    category: "System"
+                },
+                {
+                    role: "assistant",
+                    content: translations[currentLanguage]["welcome-title"] + "\n\n" + translations[currentLanguage]["welcome-text"].replace(/<br>/g, "\n"),
+                    timestamp: new Date(),
+                    category: "Welcome"
+                }
+            ];
+            
+            // Track all prompts and their categories
+            const promptTimeline = [
+                {
+                    prompt: "Welcome message",
+                    category: "System",
+                    timestamp: new Date()
+                }
+            ];
+            
+            // Pre-cached responses for instant replies
+            const responseCache = {
+                en: {
+                    // Help-related queries
+                    "help": {
+                        response: "I can assist with various cybersecurity topics including threat analysis, incident response, vulnerability management, and security best practices. Click the 'Help & Topics' button in the top right corner to see a detailed list of what I can help with, or ask me specific questions about your security challenges.",
+                        category: "Help"
+                    },
+                    "what can you do": {
+                        response: "I can assist with various cybersecurity topics including threat analysis, incident response, vulnerability management, and security best practices. Click the 'Help & Topics' button in the top right corner to see a detailed list of what I can help with, or ask me specific questions about your security challenges.",
+                        category: "Help"
+                    },
+                    
+                    // Threat detection queries
+                    "threat indicator": {
+                        response: "When analyzing threat indicators, look for unusual network traffic patterns, suspicious file hashes, unexpected registry changes, or anomalous user behavior. Would you like me to provide specific IOC examples for a particular threat actor or malware family?",
+                        category: "Threat Intelligence"
+                    },
+                    "latest threats": {
+                        response: "Current major threats include sophisticated ransomware campaigns, supply chain attacks, and zero-day exploits in common enterprise software. I recommend reviewing the latest reports from MITRE ATT&CK, CISA, and your threat intelligence feeds for specifics relevant to your industry.",
+                        category: "Threat Intelligence"
+                    },
+                    "threat analysis": {
+                        response: "For threat analysis, I recommend following these steps:\n1. Identify the threat vector\n2. Determine the scope of impact\n3. Check for IOCs in your logs\n4. Assess potential damage\n5. Implement containment measures\n\nWould you like me to elaborate on any of these steps?",
+                        category: "Threat Intelligence"
+                    },
+                    
+                    // Incident response queries
+                    "incident response steps": {
+                        response: "The standard incident response process has 6 phases:\n1. Preparation\n2. Identification\n3. Containment\n4. Eradication\n5. Recovery\n6. Lessons Learned\n\nI can guide you through any specific phase you're working on.",
+                        category: "Incident Response"
+                    },
+                    "containment strategies": {
+                        response: "Containment strategies depend on the incident type. For network incidents, consider segmenting affected systems. For endpoint compromises, isolate the device from the network. Remember to document all containment actions for the post-incident report.",
+                        category: "Incident Response"
+                    },
+                    "incident handling": {
+                        response: "When handling an incident, remember to:\n- Document everything with timestamps\n- Preserve evidence\n- Follow your organization's IRP\n- Communicate with stakeholders appropriately\n\nDo you need help with a specific incident scenario?",
+                        category: "Incident Response"
+                    },
+                    
+                    // Vulnerability queries
+                    "vulnerability scanning": {
+                        response: "For vulnerability scanning, ensure you:\n1. Have proper authorization\n2. Use updated scanning tools\n3. Schedule scans during maintenance windows if possible\n4. Prioritize findings by risk level\n5. Validate results to reduce false positives",
+                        category: "Vulnerability"
+                    },
+                    "patch management": {
+                        response: "Vulnerability remediation should follow a risk-based approach. Focus on critical vulnerabilities with public exploits first. Consider compensating controls if immediate patching isn't possible. Would you like me to suggest specific remediation strategies for a particular vulnerability?",
+                        category: "Vulnerability"
+                    },
+                    "vulnerability management": {
+                        response: "For vulnerability management, I recommend establishing a regular patching cadence, subscribing to vulnerability bulletins, and integrating threat intelligence to prioritize effectively. The NIST Vulnerability Database is a good resource for detailed CVE information.",
+                        category: "Vulnerability"
+                    },
+                    
+                    // General security best practices
+                    "network security": {
+                        response: "Key network security practices:\n- Implement zero trust architecture\n- Regularly review firewall rules\n- Segment networks by function\n- Monitor for unusual traffic patterns\n- Keep network devices updated",
+                        category: "Best Practices"
+                    },
+                    "endpoint security": {
+                        response: "Endpoint security essentials:\n- Enforce device encryption\n- Implement application whitelisting\n- Maintain updated antivirus/EDR solutions\n- Apply principle of least privilege\n- Enable logging and monitoring",
+                        category: "Best Practices"
+                    },
+                    "security best practices": {
+                        response: "Core security best practices include:\n- Regular security awareness training\n- Principle of least privilege access\n- Defense in depth strategy\n- Continuous monitoring and logging\n- Incident response planning and testing",
+                        category: "Best Practices"
+                    },
+                    
+                    // Log analysis queries
+                    "siem query": {
+                        response: "For effective log analysis, structure your queries to focus on high-value events first. Look for authentication anomalies, privilege escalations, unusual process executions, and unexpected network connections. I can help craft specific SIEM queries if you describe what you're investigating.",
+                        category: "Security Operations"
+                    },
+                    "log analysis": {
+                        response: "When analyzing logs, pay special attention to:\n- Failed login attempts\n- Unusual login times/locations\n- Changes to privileged accounts\n- Disabled or modified logging\n- System integrity violations\n\nWould you like help interpreting specific log entries?",
+                        category: "Security Operations"
+                    }
+                },
+                es: {
+                    "help": {
+                        response: "Puedo ayudar con varios temas de ciberseguridad, incluido el análisis de amenazas, la respuesta a incidentes, la gestión de vulnerabilidades y las mejores prácticas de seguridad. Haga clic en el botón 'Ayuda y temas' en la esquina superior derecha para ver una lista detallada de lo que puedo ayudar, o hágame preguntas específicas sobre sus desafíos de seguridad.",
+                        category: "Ayuda"
+                    },
+                    "qué puedes hacer": {
+                        response: "Puedo ayudar con varios temas de ciberseguridad, incluido el análisis de amenazas, la respuesta a incidentes, la gestión de vulnerabilidades y las mejores prácticas de seguridad. Haga clic en el botón 'Ayuda y temas' en la esquina superior derecha para ver una lista detallada de lo que puedo ayudar.",
+                        category: "Ayuda"
+                    },
+                    "indicador de amenaza": {
+                        response: "Al analizar indicadores de amenaza, busque patrones de tráfico de red inusuales, hashes de archivos sospechosos, cambios inesperados en el registro o comportamiento anómalo del usuario. ¿Le gustaría que proporcione ejemplos específicos de IOC para un actor de amenaza o familia de malware en particular?",
+                        category: "Inteligencia de Amenazas"
+                    },
+                    "últimas amenazas": {
+                        response: "Las principales amenazas actuales incluyen campañas sofisticadas de ransomware, ataques a la cadena de suministro y exploits de día cero en software empresarial común. Recomiendo revisar los últimos informes de MITRE ATT&CK, CISA y sus fuentes de inteligencia de amenazas para obtener detalles relevantes para su industria.",
+                        category: "Inteligencia de Amenazas"
+                    },
+                    "análisis de amenazas": {
+                        response: "Para el análisis de amenazas, recomiendo seguir estos pasos:\n1. Identificar el vector de amenaza\n2. Determinar el alcance del impacto\n3. Buscar IOC en sus registros\n4. Evaluar daños potenciales\n5. Implementar medidas de contención\n\n¿Le gustaría que profundice en alguno de estos pasos?",
+                        category: "Inteligencia de Amenazas"
+                    },
+                    "pasos de respuesta a incidentes": {
+                        response: "El proceso estándar de respuesta a incidentes tiene 6 fases:\n1. Preparación\n2. Identificación\n3. Contención\n4. Erradicación\n5. Recuperación\n6. Lecciones aprendidas\n\nPuedo guiarle en cualquier fase específica en la que esté trabajando.",
+                        category: "Respuesta a Incidentes"
+                    }
+                },
+                fr: {
+                    "aide": {
+                        response: "Je peux aider sur divers sujets de cybersécurité, y compris l'analyse des menaces, la réponse aux incidents, la gestion des vulnérabilités et les meilleures pratiques de sécurité. Cliquez sur le bouton 'Aide & Sujets' dans le coin supérieur droit pour voir une liste détaillée de ce avec quoi je peux aider, ou posez-moi des questions spécifiques sur vos défis de sécurité.",
+                        category: "Aide"
+                    },
+                    "que peux-tu faire": {
+                        response: "Je peux aider sur divers sujets de cybersécurité, y compris l'analyse des menaces, la réponse aux incidents, la gestion des vulnérabilités et les meilleures pratiques de sécurité. Cliquez sur le bouton 'Aide & Sujets' pour voir une liste détaillée.",
+                        category: "Aide"
+                    },
+                    "indicateur de menace": {
+                        response: "Lors de l'analyse des indicateurs de menace, recherchez des modèles de trafic réseau inhabituels, des hachages de fichiers suspects, des modifications inattendues du registre ou un comportement anormal des utilisateurs. Souhaitez-vous que je fournisse des exemples spécifiques d'IOC pour un acteur de menace ou une famille de malware particulière?",
+                        category: "Intelligence des Menaces"
+                    },
+                    "dernières menaces": {
+                        response: "Les principales menaces actuelles incluent des campagnes sophistiquées de ransomware, des attaques de la chaîne d'approvisionnement et des exploits zero-day dans les logiciels d'entreprise courants. Je recommande de consulter les derniers rapports de MITRE ATT&CK, CISA et vos flux de renseignements sur les menaces pour des détails pertinents pour votre industrie.",
+                        category: "Intelligence des Menaces"
+                    }
+                },
+                de: {
+                    "hilfe": {
+                        response: "Ich kann bei verschiedenen Cybersicherheitsthemen helfen, einschließlich Bedrohungsanalyse, Incident Response, Schwachstellenmanagement und Sicherheitsbest Practices. Klicken Sie auf die Schaltfläche 'Hilfe & Themen' in der oberen rechten Ecke, um eine detaillierte Liste dessen zu sehen, wobei ich helfen kann, oder stellen Sie mir spezifische Fragen zu Ihren Sicherheitsherausforderungen.",
+                        category: "Hilfe"
+                    },
+                    "was kannst du": {
+                        response: "Ich kann bei verschiedenen Cybersicherheitsthemen helfen. Klicken Sie auf 'Hilfe & Themen' für eine detaillierte Liste meiner Fähigkeiten.",
+                        category: "Hilfe"
+                    },
+                    "bedrohungsindikator": {
+                        response: "Bei der Analyse von Bedrohungsindikatoren sollten Sie nach ungewöhnlichen Netzwerkverkehrsmustern, verdächtigen Datei-Hashes, unerwarteten Registrierungsänderungen oder anomalem Benutzerverhalten suchen. Möchten Sie, dass ich spezifische IOC-Beispiele für einen bestimmten Bedrohungsakteur oder eine Malware-Familie bereitstelle?",
+                        category: "Bedrohungsanalyse"
+                    }
+                },
+                ja: {
+                    "ヘルプ": {
+                        response: "脅威分析、インシデント対応、脆弱性管理、セキュリティのベストプラクティスなど、さまざまなサイバーセキュリティトピックについて支援できます。右上の「ヘルプ & トピック」ボタンをクリックすると、詳細なリストが表示されます。具体的なセキュリティ課題について質問することもできます。",
+                        category: "ヘルプ"
+                    },
+                    "何ができる": {
+                        response: "脅威分析、インシデント対応、脆弱性管理、セキュリティのベストプラクティスなどについて支援できます。右上の「ヘルプ & トピック」ボタンから詳細を確認してください。",
+                        category: "ヘルプ"
+                    },
+                    "脅威インジケータ": {
+                        response: "脅威インジケータを分析する際は、異常なネットワークトラフィックパターン、不審なファイルハッシュ、予期しないレジストリ変更、異常なユーザー行動などを探します。特定の脅威アクターやマルウェアファミリーのIOC例を提供しましょうか？",
+                        category: "脅威インテリジェンス"
+                    }
+                }
+            };
+            
+            // Modal control functions
+            function openModal(modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // Update timeline when opening the modal
+                if (modal === timelineModal) {
+                    updateTimelineDisplay();
+                }
+            }
+            
+            function closeModal(modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Update timeline display
+            function updateTimelineDisplay() {
+                timelineItems.innerHTML = '';
+                
+                promptTimeline.forEach(item => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.classList.add('timeline-item');
+                    
+                    const promptEl = document.createElement('div');
+                    promptEl.classList.add('timeline-prompt');
+                    promptEl.textContent = item.prompt;
+                    
+                    const categoryEl = document.createElement('div');
+                    categoryEl.classList.add('timeline-category');
+                    categoryEl.textContent = item.category;
+                    
+                    const timeEl = document.createElement('div');
+                    timeEl.classList.add('timeline-time');
+                    timeEl.textContent = formatTimeAgo(item.timestamp);
+                    
+                    timelineItem.appendChild(promptEl);
+                    timelineItem.appendChild(categoryEl);
+                    timelineItem.appendChild(timeEl);
+                    
+                    timelineItems.appendChild(timelineItem);
+                });
+            }
+            
+            // Format time ago
+            function formatTimeAgo(timestamp) {
+                const seconds = Math.floor((new Date() - timestamp) / 1000);
+                
+                if (seconds < 60) return translations[currentLanguage]["just-now"];
+                
+                const timeUnits = {
+                    en: {
+                        minute: ["min ago", "mins ago"],
+                        hour: ["hour ago", "hours ago"],
+                        day: ["day ago", "days ago"]
+                    },
+                    es: {
+                        minute: ["min hace", "mins hace"],
+                        hour: ["hora hace", "horas hace"],
+                        day: ["día hace", "días hace"]
+                    },
+                    fr: {
+                        minute: ["min il y a", "mins il y a"],
+                        hour: ["heure il y a", "heures il y a"],
+                        day: ["jour il y a", "jours il y a"]
+                    },
+                    de: {
+                        minute: ["Min vor", "Min vor"],
+                        hour: ["Stunde vor", "Stunden vor"],
+                        day: ["Tag vor", "Tagen vor"]
+                    },
+                    ja: {
+                        minute: ["分前", "分前"],
+                        hour: ["時間前", "時間前"],
+                        day: ["日前", "日前"]
+                    }
+                };
+                
+                const units = timeUnits[currentLanguage];
+                
+                if (seconds < 3600) {
+                    const minutes = Math.floor(seconds / 60);
+                    return `${minutes} ${minutes === 1 ? units.minute[0] : units.minute[1]}`;
+                }
+                if (seconds < 86400) {
+                    const hours = Math.floor(seconds / 3600);
+                    return `${hours} ${hours === 1 ? units.hour[0] : units.hour[1]}`;
+                }
+                const days = Math.floor(seconds / 86400);
+                return `${days} ${days === 1 ? units.day[0] : units.day[1]}`;
+            }
+            
+            // Button event listeners
+            helpButton.addEventListener('click', () => openModal(helpModal));
+            projectsButton.addEventListener('click', () => openModal(projectsModal));
+            timelineButton.addEventListener('click', () => openModal(timelineModal));
+            closeHelp.addEventListener('click', () => closeModal(helpModal));
+            closeProjects.addEventListener('click', () => closeModal(projectsModal));
+            closeTimeline.addEventListener('click', () => closeModal(timelineModal));
+            
+            // Close modals when clicking outside
+            [helpModal, projectsModal, timelineModal].forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+            
+            // Example prompt click handler
+            examplePrompts.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI') {
+                    userInput.value = e.target.textContent;
+                    closeModal(helpModal);
+                    userInput.focus();
+                }
+            });
+            
+            // Function to add a message to the chat with timestamp
+            function addMessage(role, content, responseTime = null, category = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(role === 'user' ? 'user-message' : 'bot-message');
+                
+                messageDiv.textContent = content;
+                
+                // Add response time if available
+                if (responseTime !== null) {
+                    const timeElement = document.createElement('div');
+                    timeElement.classList.add('message-time');
+                    timeElement.textContent = `${translations[currentLanguage]["response-time"].split(":")[0]}: ${responseTime.toFixed(3)}s`;
+                    messageDiv.appendChild(timeElement);
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Add to timeline if user message
+                if (role === 'user') {
+                    const timestamp = new Date();
+                    promptTimeline.push({
+                        prompt: content,
+                        category: category || "General",
+                        timestamp: timestamp
+                    });
+                }
+            }
+            
+            // Function to simulate typing (very brief for fast responses)
+            function simulateTyping() {
+                typingIndicator.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to stop typing simulation
+            function stopTyping() {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Function to get bot response (optimized for speed)
+            async function getBotResponse(userMessage) {
+                // Record start time for response time calculation
+                const startTime = performance.now();
+                
+                // Add user message to conversation history
+                const userMessageObj = {
+                    role: "user",
+                    content: userMessage,
+                    timestamp: new Date()
+                };
+                conversationHistory.push(userMessageObj);
+                
+                // Show typing indicator (very briefly)
+                simulateTyping();
+                
+                // Process the message and generate response
+                try {
+                    // First check for exact matches in cache
+                    const lowerMessage = userMessage.toLowerCase();
+                    let botResponse = responseCache[currentLanguage]?.[lowerMessage]?.response;
+                    let category = responseCache[currentLanguage]?.[lowerMessage]?.category || "General";
+                    
+                    // If no exact match, check for partial matches
+                    if (!botResponse) {
+                        for (const [key, value] of Object.entries(responseCache[currentLanguage] || {})) {
+                            if (lowerMessage.includes(key)) {
+                                botResponse = value.response;
+                                category = value.category;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // If still no match, use default response
+                    if (!botResponse) {
+                        // Try English as fallback
+                        if (currentLanguage !== 'en') {
+                            for (const [key, value] of Object.entries(responseCache['en'] || {})) {
+                                if (lowerMessage.includes(key)) {
+                                    botResponse = value.response;
+                                    category = value.category;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (!botResponse) {
+                            botResponse = translations[currentLanguage]["help-intro"] || "I'm analyzing your cybersecurity question. Could you provide more details?";
+                            category = "General";
+                        }
+                    }
+                    
+                    // Add category to user message in timeline
+                    const lastUserPrompt = promptTimeline.findLast(item => item.prompt === userMessage);
+                    if (lastUserPrompt) {
+                        lastUserPrompt.category = category;
+                    }
+                    
+                    // Calculate response time (before async delay to simulate instant response)
+                    const endTime = performance.now();
+                    const responseTime = (endTime - startTime) / 1000; // Convert to seconds
+                    
+                    // Very brief delay to show typing indicator (10-100ms)
+                    await new Promise(resolve => setTimeout(resolve, 10 + Math.random() * 90));
+                    
+                    // Add bot response to conversation history
+                    const botMessageObj = {
+                        role: "assistant",
+                        content: botResponse,
+                        timestamp: new Date(),
+                        category: category
+                    };
+                    conversationHistory.push(botMessageObj);
+                    
+                    // Add bot response to chat with response time
+                    addMessage('bot', botResponse, responseTime);
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('bot', translations[currentLanguage]["help"]?.response || "I encountered an error. Please try again.");
+                } finally {
+                    stopTyping();
+                }
+            }
+            
+            // Event listener for send button
+            sendButton.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addMessage('user', message);
+                    userInput.value = '';
+                    getBotResponse(message);
+                }
+            });
+            
+            // Event listener for Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const message = userInput.value.trim();
+                    if (message) {
+                        addMessage('user', message);
+                        userInput.value = '';
+                        getBotResponse(message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

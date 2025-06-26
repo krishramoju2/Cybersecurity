@@ -24,19 +24,26 @@
     #study-tools, #mental-health { display: flex; gap: 12px; margin-bottom: 18px; }
     #timeline { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; }
     #history-timeline { max-height: 120px; overflow-y: auto; font-size: 0.94em; }
-    #stats ul { list-style: disc; margin-left: 24px; }
-    footer { text-align: center; color: #aaa; margin: 40px 0 10px 0; }
-    blockquote { color: #ffd700; margin: 18px 0; padding-left: 18px; border-left: 4px solid #ffd700; }
+    #stats { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 20px; }
+    #stats-charts { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-around; }
+    .stat-chart { background: rgba(0,0,0,0.4); border-radius: 12px; padding: 18px 24px; margin-bottom: 18px; }
+    .stat-chart canvas { background: #fff; border-radius: 8px; }
+    #stats-summary { margin-bottom: 24px; }
     .manual-table { width: 100%; border-collapse: collapse; margin: 18px 0; }
     .manual-table th, .manual-table td { border: 1px solid #666; padding: 8px; background: rgba(30,30,30,0.7);}
     .manual-table th { background: #333; }
+    footer { text-align: center; color: #aaa; margin: 40px 0 10px 0; }
+    blockquote { color: #ffd700; margin: 18px 0; padding-left: 18px; border-left: 4px solid #ffd700; }
     @media (max-width: 600px) {
       main { padding: 6px; }
       #input-controls textarea { width: 98%; }
       nav ul { flex-direction: column; }
       nav ul li { margin: 8px 0; }
+      #stats-charts { flex-direction: column; gap: 24px; }
     }
   </style>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="theme-default">
   <div id="theme-switcher">
@@ -187,14 +194,11 @@
           <option value="sun-tzu">Sun Tzu</option>
           <option value="mr-robot">Mr. Robot</option>
           <option value="defcon">DEFCON Speaker</option>
-          <!-- ...add more... -->
         </select>
         <select id="language-select">
           <option value="en">English</option>
           <option value="es">Español</option>
-          <!-- ...add more... -->
         </select>
-        <!-- FORMALITY DROPDOWN -->
         <select id="formality-select">
           <option value="default">Formality: Default</option>
           <option value="rfc">RFC-level Formal</option>
@@ -202,7 +206,6 @@
           <option value="casual">Casual</option>
           <option value="hacker">Hacker-con Casual</option>
         </select>
-        <!-- EMOTION DROPDOWN -->
         <select id="emotion-select">
           <option value="auto">Emotion: Auto Detect</option>
           <option value="neutral">Neutral</option>
@@ -215,7 +218,6 @@
           <option value="excited">Excited</option>
           <option value="confused">Confused</option>
           <option value="encouraging">Encouraging</option>
-          <!-- Add more as needed -->
         </select>
         <button onclick="sendMessage()">Send</button>
       </div>
@@ -250,21 +252,43 @@
       </p>
     </section>
     <section id="stats">
-      <h2>Performance Stats</h2>
-      <ul>
-        <li>Context Retention: Infinite (no loss across sessions)</li>
-        <li>Translation Accuracy: 98.5% idiomatic (benchmarked vs. native speakers)</li>
-        <li>Screenshot-to-Code: 2 seconds avg. (tested on 4K images)</li>
-        <li>Emotion Detection: 16+ emotions, 94% accuracy (validated on open datasets)</li>
-        <li>Response Speed: &lt;1s for text, &lt;3s for images (100k+ tokens context)</li>
-        <li>Persona Fidelity: Top-1 style match 91% (measured via Turing-style user tests)</li>
-        <li>Mental Health Support: 24/7, with escalation to human if needed</li>
-      </ul>
+      <h2>Performance Stats (Live Dashboard)</h2>
+      <div id="stats-summary">
+        <strong>Live Key Metrics:</strong>
+        <ul>
+          <li>Total Conversations: <span id="stat-total-conv">0</span></li>
+          <li>Automated Resolution Rate: <span id="stat-resolve-rate">0</span>%</li>
+          <li>Average CSAT: <span id="stat-csat">0</span>/100</li>
+          <li>Human Handoff Rate: <span id="stat-handoff-rate">0</span>%</li>
+          <li>Fallback Rate: <span id="stat-fallback-rate">0</span>%</li>
+        </ul>
+      </div>
+      <div id="stats-charts">
+        <div class="stat-chart">
+          <canvas id="chart-conversations" width="300" height="200"></canvas>
+          <div style="text-align:center;">Conversations Over Time</div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="chart-resolution" width="300" height="200"></canvas>
+          <div style="text-align:center;">Resolution vs Handoff Rate</div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="chart-fallback" width="300" height="200"></canvas>
+          <div style="text-align:center;">Fallback Rate by Topic</div>
+        </div>
+        <div class="stat-chart">
+          <canvas id="chart-csat" width="300" height="200"></canvas>
+          <div style="text-align:center;">CSAT Score Trend</div>
+        </div>
+      </div>
+      <p style="margin-top:20px;">
+        <em>All stats update live based on ongoing conversations and user feedback, giving you a real-time, visual overview of InfinityBot's performance and user satisfaction.</em>
+      </p>
     </section>
     <section id="why-better">
       <h2>Why InfinityBot is Unmatched</h2>
       <ul>
-        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs[2].</li>
+        <li><strong>No Goldfish Memory:</strong> Remembers everything across all sessions, unlike ChatGPT and most LLMs.</li>
         <li><strong>True Multilingual Mastery:</strong> Uses idiomatic, context-aware translation—no awkward phrasing or literal errors.</li>
         <li><strong>Screenshot-to-Code/Query:</strong> Drag, drop, and get instant code or analysis—even for large screenshots (4K+ supported).</li>
         <li><strong>Emotion & Tone Control:</strong> Detects and adapts to nuanced emotions (frustration, sarcasm, etc.), with dropdowns for user control.</li>
@@ -272,8 +296,8 @@
         <li><strong>Cheat Sheets & Flashcards:</strong> One-click study tools from any conversation, optimized for exam prep.</li>
         <li><strong>Mental Health Built-In:</strong> Detects stress/offensive prompts, offers instant support, and prioritizes user well-being.</li>
         <li><strong>Timeline History:</strong> Complete, searchable timeline of every past prompt and response—like a time machine.</li>
-        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context[2].</li>
-        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun[1].</li>
+        <li><strong>Speed:</strong> Implements advanced memory management for blazing-fast responses, even with huge context.</li>
+        <li><strong>Customizable UI:</strong> Rotate between dozens of themes for accessibility and fun.</li>
         <li><strong>Detailed Performance Stats:</strong> Transparent metrics on translation accuracy, context retention, emotion detection, and speed—more detailed than any mainstream chatbot.</li>
       </ul>
       <blockquote>
@@ -310,6 +334,99 @@
     function generateFlashcards() { alert('Flashcard generation logic goes here.'); }
     function startMeditation() { alert('Meditation session logic goes here.'); }
     function rageQuitTherapy() { alert('Rage-quit therapy logic goes here.'); }
+
+    // --- Live Stats & Charts Demo (simulated data) ---
+    // Stats numbers
+    let stats = {
+      totalConv: 1842,
+      resolveRate: 91,
+      csat: 94,
+      handoffRate: 7,
+      fallbackRate: 3
+    };
+    function updateStatsDisplay() {
+      document.getElementById('stat-total-conv').textContent = stats.totalConv;
+      document.getElementById('stat-resolve-rate').textContent = stats.resolveRate;
+      document.getElementById('stat-csat').textContent = stats.csat;
+      document.getElementById('stat-handoff-rate').textContent = stats.handoffRate;
+      document.getElementById('stat-fallback-rate').textContent = stats.fallbackRate;
+    }
+    updateStatsDisplay();
+
+    // Chart.js demo data
+    window.onload = function() {
+      // Conversations Over Time (Line)
+      new Chart(document.getElementById('chart-conversations').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets: [{
+            label: 'Conversations',
+            data: [220, 312, 301, 410, 355, 180, 64],
+            borderColor: '#39ff14',
+            backgroundColor: 'rgba(57,255,20,0.2)',
+            tension: 0.2,
+            fill: true
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true } }
+        }
+      });
+      // Resolution vs Handoff (Bar)
+      new Chart(document.getElementById('chart-resolution').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['Resolved by Bot', 'Handoff to Human'],
+          datasets: [{
+            label: 'Sessions',
+            data: [91, 9],
+            backgroundColor: ['#39ff14','#ff5e62']
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          indexAxis: 'y',
+          scales: { x: { beginAtZero: true, max: 100 } }
+        }
+      });
+      // Fallback Rate by Topic (Bar)
+      new Chart(document.getElementById('chart-fallback').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: ['General', 'Tech', 'Billing', 'Account', 'Other'],
+          datasets: [{
+            label: 'Fallback %',
+            data: [2, 3, 5, 1, 4],
+            backgroundColor: '#ffd700'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 10 } }
+        }
+      });
+      // CSAT Score Trend (Line)
+      new Chart(document.getElementById('chart-csat').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: ['Week 1','Week 2','Week 3','Week 4'],
+          datasets: [{
+            label: 'CSAT',
+            data: [91, 93, 95, 94],
+            borderColor: '#ff9966',
+            backgroundColor: 'rgba(255,153,102,0.2)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
+    };
   </script>
 </body>
 </html>

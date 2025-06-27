@@ -284,6 +284,156 @@
       #stats-summary ul { flex-direction: column; gap: 10px; }
       #theme-switcher { top: 5px; right: 5px; }
     }
+
+    /* Modal styles for study tools and mental health */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: rgba(30,30,30,0.95);
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 700px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover { color: #fff; }
+    .modal-title {
+      margin-top: 0;
+      color: #39ff14;
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+    }
+    .flashcard {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .flashcard:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-3px);
+    }
+    .flashcard-question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flashcard-answer {
+      display: none;
+      padding-top: 10px;
+      border-top: 1px dashed #444;
+    }
+    .quiz-question {
+      margin-bottom: 20px;
+    }
+    .quiz-options {
+      margin-left: 20px;
+    }
+    .quiz-option {
+      margin-bottom: 8px;
+      padding: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .quiz-option:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .correct {
+      background: rgba(57, 255, 20, 0.2);
+      border-left: 3px solid #39ff14;
+    }
+    .incorrect {
+      background: rgba(255, 94, 98, 0.2);
+      border-left: 3px solid #ff5e62;
+    }
+    .meditation-step {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 3px solid #39ff14;
+    }
+    .timer-display {
+      font-size: 2em;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .timer-controls button {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .mood-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .mood-option {
+      padding: 10px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .mood-1 { background: #ff5e62; color: white; } /* Angry */
+    .mood-2 { background: #ff9966; color: white; } /* Frustrated */
+    .mood-3 { background: #ffcc33; color: #333; } /* Neutral */
+    .mood-4 { background: #99cc33; color: #333; } /* Content */
+    .mood-5 { background: #39ff14; color: #333; } /* Happy */
+    .mood-option:hover {
+      transform: scale(1.05);
+    }
+    .mood-selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    .breathing-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: #39ff14;
+      margin: 30px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: all 4s ease-in-out;
+    }
+    .breathing-instruction {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -762,6 +912,25 @@
   <footer>
     <p>&copy; 2025 InfinityBot. Built for humans, not just users. All rights reserved.</p>
   </footer>
+
+  <!-- Modal for Study Tools -->
+  <div id="studyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('studyModal')">&times;</span>
+      <h3 class="modal-title" id="studyModalTitle">Study Tool</h3>
+      <div id="studyModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Modal for Mental Health Tools -->
+  <div id="mentalHealthModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('mentalHealthModal')">&times;</span>
+      <h3 class="modal-title" id="mentalHealthModalTitle">Mental Health Tool</h3>
+      <div id="mentalHealthModalContent"></div>
+    </div>
+  </div>
+
   <script>
     // Theme rotation logic
     const themes = ['theme-default', 'theme-cyber', 'theme-sunset'];
@@ -782,16 +951,937 @@
       });
     });
 
-    // Placeholder functions for UI buttons (to be implemented)
-    function sendMessage() { alert('Send message logic goes here. This would interact with a backend AI model.'); }
-    function generateCheatSheet() { alert('Cheat sheet generation logic goes here, utilizing chat history.'); }
-    function generateFlashcards() { alert('Flashcard generation logic goes here, pulling key terms from conversations.'); }
-    function generateQuiz() { alert('Quiz generation logic goes here, based on chat content.'); }
-    function generateSummary() { alert('Summary generation logic goes here, condensing current chat.'); }
-    function startMeditation() { alert('Meditation session logic goes here, providing guided audio/text.'); }
-    function rageQuitTherapy() { alert('Rage-quit therapy logic goes here, offering emotional processing tools.'); }
-    function moodTracker() { alert('Mood tracking logic goes here, capturing and logging user mood data.'); }
-    function stressRelief() { alert('Stress relief exercises logic goes here, offering techniques like deep breathing.'); }
+    // Modal functions
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Placeholder function for sending messages
+    function sendMessage() { 
+      const userInput = document.getElementById('user-input').value;
+      if (userInput.trim() === '') return;
+      
+      // Add user message to chat window
+      const chatWindow = document.getElementById('chat-window');
+      chatWindow.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+      
+      // Add bot response (simulated)
+      chatWindow.innerHTML += `<p><strong>InfinityBot:</strong> I'm a simulated response to your message about "${userInput}". In a real implementation, this would connect to an AI backend.</p>`;
+      
+      // Clear input
+      document.getElementById('user-input').value = '';
+      
+      // Scroll to bottom
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Study Tools Functions
+    function generateCheatSheet() {
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML = `
+        <h4>Cheat Sheet Generated from Recent Conversations</h4>
+        <p>Here's a concise summary of key information from your recent interactions with InfinityBot:</p>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 4px solid #39ff14;">
+          <h5>Key Concepts</h5>
+          <ul>
+            <li><strong>React Hooks:</strong> useState for state management, useEffect for side effects</li>
+            <li><strong>Python Decorators:</strong> Functions that modify other functions (@ syntax)</li>
+            <li><strong>Neural Networks:</strong> Input layer → Hidden layers → Output layer (with activation functions)</li>
+          </ul>
+          
+          <h5>Important Formulas</h5>
+          <ul>
+            <li><strong>Quadratic Formula:</strong> x = [-b ± √(b²-4ac)] / 2a</li>
+            <li><strong>Pythagorean Theorem:</strong> a² + b² = c²</li>
+          </ul>
+          
+          <h5>Quick Reference</h5>
+          <ul>
+            <li><strong>Git Commands:</strong> git commit -m "message", git push origin main</li>
+            <li><strong>SQL Joins:</strong> INNER, LEFT, RIGHT, FULL</li>
+          </ul>
+        </div>
+        <button onclick="downloadCheatSheet()" style="margin-top: 15px; padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Download as PDF</button>
+      `;
+      document.getElementById('studyModalTitle').textContent = 'Cheat Sheet Generator';
+      openModal('studyModal');
+    }
+
+    function downloadCheatSheet() {
+      alert('In a real implementation, this would generate and download a PDF cheat sheet.');
+    }
+
+    function generateFlashcards() {
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML = `
+        <h4>Interactive Flashcards</h4>
+        <p>Review key concepts from your conversations with these interactive flashcards. Click to reveal the answer.</p>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What is the purpose of React's useState hook?</div>
+          <div class="flashcard-answer">useState is a Hook that lets you add React state to function components. It returns a pair: the current state value and a function that lets you update it.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">Explain the concept of closure in JavaScript.</div>
+          <div class="flashcard-answer">A closure is the combination of a function bundled together with references to its surrounding state. It gives you access to an outer function's scope from an inner function.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What does the SQL JOIN clause do?</div>
+          <div class="flashcard-answer">The JOIN clause is used to combine rows from two or more tables, based on a related column between them.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What is the time complexity of binary search?</div>
+          <div class="flashcard-answer">O(log n), where n is the number of elements in the array.</div>
+        </div>
+        
+        <button onclick="addCustomFlashcard()" style="margin-top: 15px; padding: 8px 15px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Add Custom Flashcard</button>
+      `;
+      document.getElementById('studyModalTitle').textContent = 'Flashcard Generator';
+      openModal('studyModal');
+    }
+
+    function toggleFlashcardAnswer(card) {
+      const answer = card.querySelector('.flashcard-answer');
+      answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function addCustomFlashcard() {
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML += `
+        <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+          <h5>Add Custom Flashcard</h5>
+          <input type="text" id="flashcardQuestion" placeholder="Enter question" style="width: 100%; padding: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; border-radius: 5px;">
+          <textarea id="flashcardAnswer" placeholder="Enter answer" style="width: 100%; padding: 8px; margin-bottom: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; border-radius: 5px;"></textarea>
+          <button onclick="saveCustomFlashcard()" style="padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Save Flashcard</button>
+        </div>
+      `;
+    }
+
+    function saveCustomFlashcard() {
+      const question = document.getElementById('flashcardQuestion').value;
+      const answer = document.getElementById('flashcardAnswer').value;
+      
+      if (question.trim() === '' || answer.trim() === '') {
+        alert('Please enter both a question and answer.');
+        return;
+      }
+      
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML = `
+        <h4>Interactive Flashcards</h4>
+        <p>Review key concepts from your conversations with these interactive flashcards. Click to reveal the answer.</p>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">${question}</div>
+          <div class="flashcard-answer">${answer}</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What is the purpose of React's useState hook?</div>
+          <div class="flashcard-answer">useState is a Hook that lets you add React state to function components. It returns a pair: the current state value and a function that lets you update it.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">Explain the concept of closure in JavaScript.</div>
+          <div class="flashcard-answer">A closure is the combination of a function bundled together with references to its surrounding state. It gives you access to an outer function's scope from an inner function.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What does the SQL JOIN clause do?</div>
+          <div class="flashcard-answer">The JOIN clause is used to combine rows from two or more tables, based on a related column between them.</div>
+        </div>
+        
+        <div class="flashcard" onclick="toggleFlashcardAnswer(this)">
+          <div class="flashcard-question">What is the time complexity of binary search?</div>
+          <div class="flashcard-answer">O(log n), where n is the number of elements in the array.</div>
+        </div>
+        
+        <button onclick="addCustomFlashcard()" style="margin-top: 15px; padding: 8px 15px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Add Custom Flashcard</button>
+      `;
+    }
+
+    function generateQuiz() {
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML = `
+        <h4>Custom Quiz</h4>
+        <p>Test your knowledge with this quiz generated from your recent conversations.</p>
+        
+        <div class="quiz-question">
+          <p>1. What is the correct syntax for creating a React functional component?</p>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="checkAnswer(this, true)">const MyComponent = () => { return ... }</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">class MyComponent extends React.Component</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">function MyComponent() { render() { ... } }</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">React.createComponent(MyComponent)</div>
+          </div>
+        </div>
+        
+        <div class="quiz-question">
+          <p>2. Which of these is NOT a JavaScript data type?</p>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="checkAnswer(this, false)">String</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Number</div>
+            <div class="quiz-option" onclick="checkAnswer(this, true)">Character</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Boolean</div>
+          </div>
+        </div>
+        
+        <div class="quiz-question">
+          <p>3. What does the 'M' stand for in MVC architecture?</p>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="checkAnswer(this, true)">Model</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Module</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Main</div>
+            <div class="quiz-option" onclick="checkAnswer(this, false)">Method</div>
+          </div>
+        </div>
+        
+        <div id="quizResult" style="margin-top: 20px; font-weight: bold;"></div>
+        
+        <button onclick="generateNewQuiz()" style="margin-top: 15px; padding: 8px 15px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Generate New Quiz</button>
+      `;
+      document.getElementById('studyModalTitle').textContent = 'Quiz Generator';
+      openModal('studyModal');
+    }
+
+    let correctAnswers = 0;
+    let totalQuestions = 0;
+
+    function checkAnswer(element, isCorrect) {
+      totalQuestions++;
+      if (isCorrect) {
+        correctAnswers++;
+        element.classList.add('correct');
+      } else {
+        element.classList.add('incorrect');
+      }
+      
+      // Disable all options after selection
+      const options = element.parentElement.querySelectorAll('.quiz-option');
+      options.forEach(option => {
+        option.style.pointerEvents = 'none';
+      });
+      
+      // Update results
+      document.getElementById('quizResult').textContent = `Score: ${correctAnswers}/${totalQuestions} correct answers`;
+    }
+
+    function generateNewQuiz() {
+      generateQuiz(); // Regenerate the quiz
+      correctAnswers = 0;
+      totalQuestions = 0;
+    }
+
+    function generateSummary() {
+      const modalContent = document.getElementById('studyModalContent');
+      modalContent.innerHTML = `
+        <h4>Conversation Summary</h4>
+        <p>Here's a concise summary of your recent conversation with InfinityBot:</p>
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border-left: 4px solid #39ff14;">
+          <h5>Key Topics Discussed</h5>
+          <ul>
+            <li>React Hooks and their usage in functional components</li>
+            <li>JavaScript closures and their practical applications</li>
+            <li>SQL JOIN operations and their different types</li>
+            <li>Time complexity analysis of common algorithms</li>
+          </ul>
+          
+          <h5>Action Items</h5>
+          <ul>
+            <li>Practice implementing useState and useEffect in a sample React project</li>
+            <li>Create a closure example that demonstrates private variables</li>
+            <li>Write SQL queries using different JOIN types on a sample database</li>
+          </ul>
+          
+          <h5>Key Takeaways</h5>
+          <ul>
+            <li>Functional components with Hooks are now the preferred way to write React components</li>
+            <li>Closures are fundamental to understanding how JavaScript manages scope</li>
+            <li>Understanding JOINs is crucial for working with relational databases</li>
+          </ul>
+        </div>
+        
+        <button onclick="downloadSummary()" style="margin-top: 15px; padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Download Summary</button>
+      `;
+      document.getElementById('studyModalTitle').textContent = 'Conversation Summary';
+      openModal('studyModal');
+    }
+
+    function downloadSummary() {
+      alert('In a real implementation, this would download the summary as a text file or PDF.');
+    }
+
+    // Mental Health Functions
+    function startMeditation() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Guided Meditation</h4>
+        <p>Follow along with this 5-minute guided meditation to relax and refocus.</p>
+        
+        <div class="timer-display" id="meditationTimer">05:00</div>
+        
+        <div class="meditation-step">
+          <strong>1. Find a Comfortable Position</strong>
+          <p>Sit or lie down in a comfortable position. Close your eyes if that feels comfortable.</p>
+        </div>
+        
+        <div class="meditation-step">
+          <strong>2. Focus on Your Breath</strong>
+          <p>Breathe in deeply through your nose for 4 seconds, hold for 4 seconds, and exhale slowly for 6 seconds.</p>
+          <div class="breathing-circle" id="breathingCircle">Breathe In</div>
+          <div class="breathing-instruction" id="breathingInstruction">Begin with a deep breath in...</div>
+        </div>
+        
+        <div class="meditation-step">
+          <strong>3. Body Scan</strong>
+          <p>Notice any areas of tension. Imagine breathing into those areas and releasing the tension as you exhale.</p>
+        </div>
+        
+        <div class="timer-controls">
+          <button onclick="startTimer()" id="startButton">Start</button>
+          <button onclick="pauseTimer()" id="pauseButton" disabled>Pause</button>
+          <button onclick="resetTimer()" id="resetButton">Reset</button>
+        </div>
+        
+        <audio id="meditationBell" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+      `;
+      document.getElementById('mentalHealthModalTitle').textContent = 'Guided Meditation';
+      openModal('mentalHealthModal');
+    }
+
+    let meditationInterval;
+    let secondsLeft = 300; // 5 minutes
+    let isBreathingIn = true;
+    let breathingInterval;
+
+    function startTimer() {
+      document.getElementById('startButton').disabled = true;
+      document.getElementById('pauseButton').disabled = false;
+      
+      // Play starting bell
+      document.getElementById('meditationBell').play();
+      
+      // Start main timer
+      meditationInterval = setInterval(() => {
+        secondsLeft--;
+        updateTimerDisplay();
+        
+        if (secondsLeft <= 0) {
+          clearInterval(meditationInterval);
+          document.getElementById('meditationBell').play();
+          document.getElementById('startButton').disabled = false;
+          document.getElementById('pauseButton').disabled = true;
+        }
+      }, 1000);
+      
+      // Start breathing animation
+      const breathingCircle = document.getElementById('breathingCircle');
+      const breathingInstruction = document.getElementById('breathingInstruction');
+      let breathCount = 0;
+      
+      breathingInterval = setInterval(() => {
+        if (isBreathingIn) {
+          breathingCircle.textContent = "Breathe In";
+          breathingInstruction.textContent = "Breathe in deeply... (4 seconds)";
+          breathingCircle.style.transform = "scale(1.5)";
+          isBreathingIn = false;
+          breathCount++;
+        } else {
+          breathingCircle.textContent = "Breathe Out";
+          breathingInstruction.textContent = "Breathe out slowly... (6 seconds)";
+          breathingCircle.style.transform = "scale(1)";
+          isBreathingIn = true;
+        }
+        
+        if (breathCount >= 10) { // After 10 breaths, switch to body scan
+          clearInterval(breathingInterval);
+          breathingInstruction.textContent = "Now focus on relaxing each part of your body from head to toe...";
+        }
+      }, 10000); // 10 seconds per breath cycle (4 in, 6 out)
+    }
+
+    function pauseTimer() {
+      clearInterval(meditationInterval);
+      clearInterval(breathingInterval);
+      document.getElementById('startButton').disabled = false;
+      document.getElementById('pauseButton').disabled = true;
+    }
+
+    function resetTimer() {
+      clearInterval(meditationInterval);
+      clearInterval(breathingInterval);
+      secondsLeft = 300;
+      updateTimerDisplay();
+      document.getElementById('startButton').disabled = false;
+      document.getElementById('pauseButton').disabled = true;
+      document.getElementById('breathingCircle').style.transform = "scale(1)";
+      document.getElementById('breathingInstruction').textContent = "Begin with a deep breath in...";
+      isBreathingIn = true;
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(secondsLeft / 60);
+      const seconds = secondsLeft % 60;
+      document.getElementById('meditationTimer').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function rageQuitTherapy() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Rage-Quit Therapy</h4>
+        <p>This exercise helps process frustration in a constructive way. Follow these steps:</p>
+        
+        <div style="background: rgba(255,94,98,0.1); padding: 15px; border-radius: 10px; border-left: 4px solid #ff5e62; margin-bottom: 20px;">
+          <strong>1. Identify the Source</strong>
+          <p>What exactly is frustrating you? Be as specific as possible.</p>
+          <textarea id="frustrationSource" placeholder="Describe what's frustrating you..." style="width: 100%; min-height: 80px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #ff5e62; border-radius: 5px;"></textarea>
+        </div>
+        
+        <div style="background: rgba(255,94,98,0.1); padding: 15px; border-radius: 10px; border-left: 4px solid #ff5e62; margin-bottom: 20px;">
+          <strong>2. Physical Release</strong>
+          <p>Try one of these physical actions to release tension:</p>
+          <ul>
+            <li><button onclick="simulatePunch()" style="padding: 5px 10px; background: rgba(255,94,98,0.3); color: white; border: 1px solid #ff5e62; border-radius: 5px; cursor: pointer;">Simulate Punching</button> (into a pillow or empty space)</li>
+            <li><button onclick="simulateScream()" style="padding: 5px 10px; background: rgba(255,94,98,0.3); color: white; border: 1px solid #ff5e62; border-radius: 5px; cursor: pointer;">Silent Scream</button> (open mouth wide, tense body, then relax)</li>
+            <li><button onclick="doJumpingJacks()" style="padding: 5px 10px; background: rgba(255,94,98,0.3); color: white; border: 1px solid #ff5e62; border-radius: 5px; cursor: pointer;">10 Jumping Jacks</button></li>
+          </ul>
+          <div id="physicalFeedback" style="margin-top: 10px; font-style: italic;"></div>
+        </div>
+        
+        <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; border-left: 4px solid #39ff14;">
+          <strong>3. Reframe the Situation</strong>
+          <p>Now let's look at the situation differently:</p>
+          <ul>
+            <li>Is this something that will matter in a week/month/year?</li>
+            <li>What's one small step you can take to improve the situation?</li>
+            <li>Can you find any humor or learning opportunity in this?</li>
+          </ul>
+          <textarea id="reframedThoughts" placeholder="Write your reframed perspective..." style="width: 100%; min-height: 80px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #39ff14; border-radius: 5px;"></textarea>
+        </div>
+        
+        <button onclick="completeRageQuit()" style="margin-top: 20px; padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">I Feel Better Now</button>
+      `;
+      document.getElementById('mentalHealthModalTitle').textContent = 'Rage-Quit Therapy';
+      openModal('mentalHealthModal');
+    }
+
+    function simulatePunch() {
+      document.getElementById('physicalFeedback').innerHTML = `
+        <p>💥 <strong>Punch executed!</strong> Feel that tension releasing? Take a deep breath and shake out your arms.</p>
+      `;
+      // Simulate punch effect with CSS
+      const feedback = document.getElementById('physicalFeedback');
+      feedback.style.transform = 'translateX(10px)';
+      setTimeout(() => { feedback.style.transform = 'translateX(-10px)' }, 100);
+      setTimeout(() => { feedback.style.transform = 'translateX(0)' }, 200);
+    }
+
+    function simulateScream() {
+      document.getElementById('physicalFeedback').innerHTML = `
+        <p>😤 <strong>Silent scream completed!</strong> Notice how your body feels after releasing that tension.</p>
+      `;
+    }
+
+    function doJumpingJacks() {
+      let count = 0;
+      const feedback = document.getElementById('physicalFeedback');
+      feedback.innerHTML = `<p>Starting jumping jacks... <span id="jackCount">0</span>/10</p>`;
+      
+      const jackInterval = setInterval(() => {
+        count++;
+        document.getElementById('jackCount').textContent = count;
+        
+        if (count >= 10) {
+          clearInterval(jackInterval);
+          feedback.innerHTML += `<p>🏃‍♂️ <strong>Great job!</strong> Your body has released endorphins to improve your mood.</p>`;
+        }
+      }, 800);
+    }
+
+    function completeRageQuit() {
+      const frustration = document.getElementById('frustrationSource').value;
+      const reframed = document.getElementById('reframedThoughts').value;
+      
+      if (frustration.trim() === '' || reframed.trim() === '') {
+        alert('Please complete both sections before finishing.');
+        return;
+      }
+      
+      document.getElementById('mentalHealthModalContent').innerHTML = `
+        <h4>Therapy Session Complete</h4>
+        <p>You've successfully processed your frustration. Remember this technique for future stressful moments.</p>
+        
+        <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; margin-top: 20px;">
+          <p><strong>Original Frustration:</strong> ${frustration}</p>
+          <p><strong>Reframed Perspective:</strong> ${reframed}</p>
+        </div>
+        
+        <button onclick="closeModal('mentalHealthModal')" style="margin-top: 20px; padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+      `;
+    }
+
+    function moodTracker() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Mood Tracker</h4>
+        <p>Track your mood over time to identify patterns and triggers.</p>
+        
+        <div style="margin-bottom: 20px;">
+          <strong>How are you feeling right now?</strong>
+          <div class="mood-selector">
+            <div class="mood-option mood-1" onclick="selectMood(this, 1)">😠 Angry</div>
+            <div class="mood-option mood-2" onclick="selectMood(this, 2)">😤 Frustrated</div>
+            <div class="mood-option mood-3" onclick="selectMood(this, 3)">😐 Neutral</div>
+            <div class="mood-option mood-4" onclick="selectMood(this, 4)">🙂 Content</div>
+            <div class="mood-option mood-5" onclick="selectMood(this, 5)">😄 Happy</div>
+          </div>
+        </div>
+        
+        <div id="moodDetails" style="display: none;">
+          <strong>Additional Notes (optional)</strong>
+          <textarea id="moodNotes" placeholder="Any details about what's affecting your mood?" style="width: 100%; min-height: 80px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #444; border-radius: 5px;"></textarea>
+          
+          <button onclick="saveMoodEntry()" style="margin-top: 15px; padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Save Mood Entry</button>
+        </div>
+        
+        <div id="moodHistory" style="margin-top: 30px; display: none;">
+          <h5>Your Mood History</h5>
+          <p><em>In a full implementation, this would show your mood trends over time.</em></p>
+          <canvas id="moodChart" width="400" height="200"></canvas>
+        </div>
+      `;
+      document.getElementById('mentalHealthModalTitle').textContent = 'Mood Tracker';
+      openModal('mentalHealthModal');
+    }
+
+    function selectMood(element, moodLevel) {
+      // Remove selected class from all options
+      document.querySelectorAll('.mood-option').forEach(option => {
+        option.classList.remove('mood-selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('mood-selected');
+      
+      // Store selected mood
+      currentMood = moodLevel;
+      
+      // Show additional details
+      document.getElementById('moodDetails').style.display = 'block';
+    }
+
+    function saveMoodEntry() {
+      const notes = document.getElementById('moodNotes').value;
+      const moodText = ['', 'Angry', 'Frustrated', 'Neutral', 'Content', 'Happy'][currentMood];
+      
+      document.getElementById('mentalHealthModalContent').innerHTML = `
+        <h4>Mood Recorded</h4>
+        <p>Your mood has been saved to your personal history.</p>
+        
+        <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; margin-top: 20px;">
+          <p><strong>Mood:</strong> ${moodText}</p>
+          ${notes ? `<p><strong>Notes:</strong> ${notes}</p>` : ''}
+        </div>
+        
+        <button onclick="showMoodHistory()" style="margin-top: 15px; padding: 8px 15px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">View Mood History</button>
+        <button onclick="closeModal('mentalHealthModal')" style="margin-top: 15px; padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+      `;
+    }
+
+    function showMoodHistory() {
+      document.getElementById('mentalHealthModalContent').innerHTML += `
+        <div id="moodHistory" style="margin-top: 30px;">
+          <h5>Your Mood History</h5>
+          <p>This simulated chart shows how your mood tracking would appear over time.</p>
+          <canvas id="moodChart" width="400" height="200"></canvas>
+          
+          <button onclick="closeModal('mentalHealthModal')" style="margin-top: 15px; padding: 8px 15px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+      `;
+      
+      // Simulate mood chart
+      const ctx = document.getElementById('moodChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Mood Level',
+            data: [3, 4, 2, 5, 4, 3, 4],
+            borderColor: '#39ff14',
+            backgroundColor: 'rgba(57, 255, 20, 0.1)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 1,
+              max: 5,
+              ticks: {
+                callback: function(value) {
+                  const moods = ['', 'Angry', 'Frustrated', 'Neutral', 'Content', 'Happy'];
+                  return moods[value];
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function stressRelief() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Stress Relief Exercises</h4>
+        <p>Choose a technique to quickly reduce stress and anxiety.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+          <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(57,255,20,0.3); cursor: pointer;" onclick="startBreathingExercise()">
+            <h5>Breathing Exercise</h5>
+            <p>4-7-8 technique to calm your nervous system</p>
+          </div>
+          
+          <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(57,255,20,0.3); cursor: pointer;" onclick="startProgressiveMuscleRelaxation()">
+            <h5>Muscle Relaxation</h5>
+            <p>Tense and release each muscle group</p>
+          </div>
+          
+          <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(57,255,20,0.3); cursor: pointer;" onclick="startFiveSensesExercise()">
+            <h5>5-4-3-2-1 Grounding</h5>
+            <p>Use your senses to stay present</p>
+          </div>
+          
+          <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(57,255,20,0.3); cursor: pointer;" onclick="startGratitudeExercise()">
+            <h5>Gratitude Practice</h5>
+            <p>Shift focus to positive aspects</p>
+          </div>
+        </div>
+      `;
+      document.getElementById('mentalHealthModalTitle').textContent = 'Stress Relief Exercises';
+      openModal('mentalHealthModal');
+    }
+
+    function startBreathingExercise() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>4-7-8 Breathing Exercise</h4>
+        <p>This technique helps reduce anxiety and promote relaxation.</p>
+        
+        <div class="breathing-circle" id="breathingCircle" style="margin: 30px auto;">Breathe In</div>
+        <div class="breathing-instruction" id="breathingInstruction">Begin with a deep breath in...</div>
+        
+        <div style="margin-top: 30px;">
+          <h5>Instructions:</h5>
+          <ol>
+            <li>Breathe in quietly through your nose for 4 seconds</li>
+            <li>Hold your breath for 7 seconds</li>
+            <li>Exhale completely through your mouth for 8 seconds</li>
+            <li>Repeat this cycle 4 times</li>
+          </ol>
+        </div>
+        
+        <button onclick="stressRelief()" style="margin-top: 20px; padding: 8px 15px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Back to Exercises</button>
+      `;
+      
+      const breathingCircle = document.getElementById('breathingCircle');
+      const breathingInstruction = document.getElementById('breathingInstruction');
+      let cycleCount = 0;
+      
+      function breathingCycle() {
+        // Breathe in
+        breathingCircle.textContent = "Breathe In";
+        breathingInstruction.textContent = "Breathe in through your nose... (4 seconds)";
+        breathingCircle.style.backgroundColor = "#39ff14";
+        breathingCircle.style.transform = "scale(1.2)";
+        
+        setTimeout(() => {
+          // Hold
+          breathingCircle.textContent = "Hold";
+          breathingInstruction.textContent = "Hold your breath... (7 seconds)";
+          breathingCircle.style.backgroundColor = "#ffcc33";
+          
+          setTimeout(() => {
+            // Breathe out
+            breathingCircle.textContent = "Breathe Out";
+            breathingInstruction.textContent = "Exhale slowly through your mouth... (8 seconds)";
+            breathingCircle.style.backgroundColor = "#ff5e62";
+            breathingCircle.style.transform = "scale(1)";
+            
+            setTimeout(() => {
+              cycleCount++;
+              if (cycleCount < 4) {
+                breathingCycle();
+              } else {
+                breathingCircle.textContent = "Complete!";
+                breathingInstruction.textContent = "You've completed 4 cycles. Notice how you feel.";
+                breathingCircle.style.backgroundColor = "#39ff14";
+              }
+            }, 8000);
+          }, 7000);
+        }, 4000);
+      }
+      
+      breathingCycle();
+    }
+
+    function startProgressiveMuscleRelaxation() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Progressive Muscle Relaxation</h4>
+        <p>This exercise helps release physical tension throughout your body.</p>
+        
+        <div id="pmrInstruction" style="margin: 20px 0; padding: 15px; background: rgba(57,255,20,0.1); border-radius: 10px;">
+          <h5 id="pmrStepTitle">Starting...</h5>
+          <p id="pmrStepDescription">Get ready to tense and relax each muscle group.</p>
+        </div>
+        
+        <button onclick="nextPmrStep()" id="pmrNextButton" style="padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Begin</button>
+        <button onclick="stressRelief()" style="margin-left: 10px; padding: 10px 20px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Back to Exercises</button>
+        
+        <div style="margin-top: 20px;">
+          <h5>Muscle Groups:</h5>
+          <ol id="pmrProgress">
+            <li>Feet</li>
+            <li>Legs</li>
+            <li>Abdomen</li>
+            <li>Back</li>
+            <li>Hands</li>
+            <li>Arms</li>
+            <li>Shoulders</li>
+            <li>Neck</li>
+            <li>Face</li>
+          </ol>
+        </div>
+      `;
+      
+      const pmrSteps = [
+        {
+          title: "Feet",
+          description: "Curl your toes tightly and tense the muscles in your feet. Hold for 5 seconds, then release and notice the difference."
+        },
+        {
+          title: "Legs",
+          description: "Tense your calf muscles by pointing your toes upward. Then tense your thighs. Hold for 5 seconds, then release."
+        },
+        {
+          title: "Abdomen",
+          description: "Tighten your stomach muscles as if bracing for a punch. Hold for 5 seconds, then release completely."
+        },
+        {
+          title: "Back",
+          description: "Arch your back slightly and squeeze your shoulder blades together. Hold for 5 seconds, then release."
+        },
+        {
+          title: "Hands",
+          description: "Make tight fists with your hands, feeling the tension in your hands and forearms. Hold for 5 seconds, then release."
+        },
+        {
+          title: "Arms",
+          description: "Bend your arms and tense your biceps. Hold for 5 seconds, then release and let them relax completely."
+        },
+        {
+          title: "Shoulders",
+          description: "Shrug your shoulders up toward your ears. Hold for 5 seconds, then let them drop and relax."
+        },
+        {
+          title: "Neck",
+          description: "Gently tilt your head back and feel the stretch in your neck. Hold for 5 seconds, then return to neutral."
+        },
+        {
+          title: "Face",
+          description: "Scrunch up all your facial muscles - forehead, eyes, mouth. Hold for 5 seconds, then relax completely."
+        },
+        {
+          title: "Complete",
+          description: "Take a moment to notice how your whole body feels. Scan for any remaining tension and consciously release it."
+        }
+      ];
+      
+      let currentPmrStep = -1;
+      
+      function nextPmrStep() {
+        currentPmrStep++;
+        
+        if (currentPmrStep >= pmrSteps.length) {
+          currentPmrStep = pmrSteps.length - 1;
+          document.getElementById('pmrNextButton').textContent = "Finished";
+          document.getElementById('pmrNextButton').disabled = true;
+          return;
+        }
+        
+        document.getElementById('pmrStepTitle').textContent = pmrSteps[currentPmrStep].title;
+        document.getElementById('pmrStepDescription').textContent = pmrSteps[currentPmrStep].description;
+        
+        if (currentPmrStep < pmrSteps.length - 1) {
+          document.getElementById('pmrNextButton').textContent = "Next";
+          // Highlight current step in progress list
+          const progressItems = document.querySelectorAll('#pmrProgress li');
+          progressItems.forEach((item, index) => {
+            if (index === currentPmrStep) {
+              item.style.fontWeight = 'bold';
+              item.style.color = '#39ff14';
+            } else if (index < currentPmrStep) {
+              item.style.textDecoration = 'line-through';
+              item.style.opacity = '0.7';
+            }
+          });
+        } else {
+          document.getElementById('pmrNextButton').textContent = "Complete";
+        }
+      }
+      
+      // Initialize first step
+      nextPmrStep();
+    }
+
+    function startFiveSensesExercise() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>5-4-3-2-1 Grounding Technique</h4>
+        <p>This exercise helps bring you back to the present moment by engaging your senses.</p>
+        
+        <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+          <h5 id="senseTitle">Notice 5 Things You Can See</h5>
+          <p id="senseDescription">Look around and name 5 things you can see in your environment.</p>
+          <textarea id="senseInput" placeholder="List items here..." style="width: 100%; min-height: 60px; padding: 10px; margin-top: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #39ff14; border-radius: 5px;"></textarea>
+        </div>
+        
+        <button onclick="nextSenseStep()" id="senseNextButton" style="padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Next</button>
+        <button onclick="stressRelief()" style="margin-left: 10px; padding: 10px 20px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Back to Exercises</button>
+      `;
+      
+      const senseSteps = [
+        {
+          title: "Notice 5 Things You Can See",
+          description: "Look around and name 5 things you can see in your environment.",
+          example: "e.g., a painting on the wall, a coffee cup, a tree outside"
+        },
+        {
+          title: "Notice 4 Things You Can Touch",
+          description: "Name 4 things you can feel or touch right now.",
+          example: "e.g., the fabric of your shirt, the chair beneath you, your phone"
+        },
+        {
+          title: "Notice 3 Things You Can Hear",
+          description: "Identify 3 sounds you can hear in this moment.",
+          example: "e.g., birds chirping, the hum of a computer, distant traffic"
+        },
+        {
+          title: "Notice 2 Things You Can Smell",
+          description: "Name 2 things you can smell or 2 smells you like.",
+          example: "e.g., fresh air, your shampoo, coffee"
+        },
+        {
+          title: "Notice 1 Thing You Can Taste",
+          description: "Identify 1 thing you can taste or 1 taste you enjoy.",
+          example: "e.g., the aftertaste of coffee, mint from toothpaste"
+        },
+        {
+          title: "Exercise Complete",
+          description: "Take a deep breath. Notice how you feel more present and grounded."
+        }
+      ];
+      
+      let currentSenseStep = 0;
+      const senseResponses = [];
+      
+      function nextSenseStep() {
+        // Save current response
+        if (currentSenseStep < senseSteps.length - 1) {
+          const response = document.getElementById('senseInput').value;
+          senseResponses.push(response);
+        }
+        
+        currentSenseStep++;
+        
+        if (currentSenseStep >= senseSteps.length) {
+          // Show completion
+          document.getElementById('senseTitle').textContent = senseSteps[senseSteps.length - 1].title;
+          document.getElementById('senseDescription').textContent = senseSteps[senseSteps.length - 1].description;
+          document.getElementById('senseInput').style.display = 'none';
+          document.getElementById('senseNextButton').style.display = 'none';
+          
+          // Show summary
+          let summaryHTML = `<div style="margin-top: 20px;"><h5>Your Observations:</h5><ul>`;
+          for (let i = 0; i < senseSteps.length - 1; i++) {
+            summaryHTML += `<li><strong>${senseSteps[i].title}:</strong> ${senseResponses[i] || 'Not provided'}</li>`;
+          }
+          summaryHTML += `</ul></div>`;
+          
+          modalContent.innerHTML += summaryHTML;
+          return;
+        }
+        
+        // Update to next step
+        document.getElementById('senseTitle').textContent = senseSteps[currentSenseStep].title;
+        document.getElementById('senseDescription').textContent = `${senseSteps[currentSenseStep].description} ${senseSteps[currentSenseStep].example || ''}`;
+        document.getElementById('senseInput').value = '';
+        
+        if (currentSenseStep === senseSteps.length - 1) {
+          document.getElementById('senseNextButton').textContent = "Finish";
+        }
+      }
+    }
+
+    function startGratitudeExercise() {
+      const modalContent = document.getElementById('mentalHealthModalContent');
+      modalContent.innerHTML = `
+        <h4>Gratitude Practice</h4>
+        <p>Focusing on things you're grateful for can shift your perspective and reduce stress.</p>
+        
+        <div style="margin: 20px 0;">
+          <h5>List 3 things you're grateful for today:</h5>
+          <textarea id="gratitudeList" placeholder="1. 
+2. 
+3. " style="width: 100%; min-height: 100px; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #39ff14; border-radius: 5px; line-height: 1.6;"></textarea>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <h5>Why are you grateful for these things?</h5>
+          <textarea id="gratitudeReasons" placeholder="Explain why these things matter to you..." style="width: 100%; min-height: 100px; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid #39ff14; border-radius: 5px;"></textarea>
+        </div>
+        
+        <button onclick="completeGratitudeExercise()" style="padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Complete Exercise</button>
+        <button onclick="stressRelief()" style="margin-left: 10px; padding: 10px 20px; background: rgba(57, 255, 20, 0.2); color: #39ff14; border: 1px solid #39ff14; border-radius: 5px; cursor: pointer;">Back to Exercises</button>
+      `;
+    }
+
+    function completeGratitudeExercise() {
+      const list = document.getElementById('gratitudeList').value;
+      const reasons = document.getElementById('gratitudeReasons').value;
+      
+      if (list.trim() === '' || reasons.trim() === '') {
+        alert('Please complete both sections before finishing.');
+        return;
+      }
+      
+      document.getElementById('mentalHealthModalContent').innerHTML = `
+        <h4>Gratitude Journal Complete</h4>
+        <p>Regular gratitude practice can rewire your brain to focus more on the positive.</p>
+        
+        <div style="background: rgba(57,255,20,0.1); padding: 15px; border-radius: 10px; margin-top: 20px;">
+          <h5>Things You're Grateful For:</h5>
+          <p style="white-space: pre-line;">${list}</p>
+          
+          <h5>Why These Matter:</h5>
+          <p>${reasons}</p>
+        </div>
+        
+        <button onclick="stressRelief()" style="margin-top: 20px; padding: 10px 20px; background: #39ff14; color: #222; border: none; border-radius: 5px; cursor: pointer;">Back to Exercises</button>
+      `;
+    }
 
     // --- Live Stats & Charts Demo (simulated data) ---
     // Stats numbers

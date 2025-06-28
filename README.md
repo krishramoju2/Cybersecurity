@@ -15,3 +15,4 @@
 15. user mnual
 Here’s how you use your **InfinityBot** HTML file (`paste-2.txt`) and what it can do:
 
+add a Notes app with advanced caligraphy will be added soon </h2>, add app settings for bg color to launch soon with vast varety of designs , add // weather app to be added with pinpoint rain prediction</h2
